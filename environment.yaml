@@ -1,0 +1,15 @@
+name: bayesevt
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - conda-forge::jupytext
+  - conda-forge::jupyter-book
+  - conda-forge::myst-parser
+  - conda-forge::pre-commit
+  - conda-forge::"nodejs>=20,<21"
+  - conda-forge::"mystmd"
+  - pip
+  - pip:
+      - cookiecutter
+    #   - sphinx-proof

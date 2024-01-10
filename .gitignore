@@ -1,0 +1,17 @@
+\wandb/
+\.ipynb_checkpoints/
+*.DS_Store
+
+\__pycache__/
+\.obsidian/
+\.vscode/
+\code/jax/notebooks/numpyro/results/
+*.zarr
+*.zip
+*.nc
+*.js
+*.css
+*.woff
+*.xml
+\.idea/
+\_build/
