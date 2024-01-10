@@ -1,0 +1,12 @@
+format: jb-book
+root: notes/index.md
+chapters:
+  - title: Introduction
+    sections:
+      - file: notes/litreview.md
+  - title: Theory
+    sections:
+      - file: notes/theory/evt
+  - title: Data
+    sections:
+      - file: notes/data/datasets

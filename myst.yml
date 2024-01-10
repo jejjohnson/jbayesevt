@@ -1,15 +1,17 @@
 # See docs at: https://mystmd.org/guide/frontmatter
 version: 1
 project:
-  # title:
+  title: Bayesian Extreme Value Modeling For Climate
   # description:
   keywords: []
   authors: []
   github: https://github.com/jejjohnson/jbayesevt
+  license: CC-BY-4.0
+  open_access: true
   # bibliography: []
 site:
   template: book-theme
-  # title:
+  title: Learn More
   # options:
   #   logo: site_logo.png
   nav: []
