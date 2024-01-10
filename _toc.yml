@@ -3,10 +3,24 @@ root: notes/index.md
 chapters:
   - title: Introduction
     sections:
+      - file: notes/project.md
       - file: notes/litreview.md
   - title: Theory
     sections:
       - file: notes/theory/evt
+      - file: notes/theory/eval
+      - file: notes/theory/bayes
   - title: Data
     sections:
       - file: notes/data/datasets
+      - file: notes/data/data_access
+  - title: Modeling
+    sections:
+      - file: notes/modeling/features_manual
+      - file: notes/modeling/features_ai
+      - file: notes/modeling/software
+  - title: Cookbook
+    sections:
+      - file: notes/cookbook/filtering
+      - file: notes/cookbook/anomalies
+      - file: notes/cookbook/spatial_mean

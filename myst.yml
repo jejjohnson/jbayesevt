@@ -1,7 +1,8 @@
 # See docs at: https://mystmd.org/guide/frontmatter
 version: 1
 project:
-  title: Bayesian Extreme Value Modeling For Climate
+  title: Bayesian Methods for Extreme Value Modeling
+  subtitle: Applications in Climate
   # description:
   keywords: []
   authors: []
