@@ -12,22 +12,6 @@ authors:
     email: juanjohn@ucm.es
 license: CC-BY-4.0
 keywords: simulations
-abbreviations:
-    ERA5: ECMWF Reanalysis Version 5
-    CMIP6: Coupled Model Intercomparison Project Phase 6
-    AMIP6: Atmospherical Model Intercomparison Project Phase 6
-    PDEs: Partial Differential Equations
-    RHS: Right Hand Side
-    TLDR: Too Long Did Not Read
-    SSP: Shared Socioeconomic Pathways
-    CDS: Climate Data Store
-    GEVD: Generalized Extreme Value Distribution
-    GPD: Generalized Pareto Distribution
-    PPL: Probabilistic Programming Language
-    MLE: Maximum Likelihood Expectation
-    MAP: Maximum A Posteriori
-    MCMC: Markov Chain Monte Carlo
-    HMC: Hamiltonian Monte Carlo
 ---
 
 

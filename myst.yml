@@ -10,6 +10,31 @@ project:
   license: CC-BY-4.0
   open_access: true
   # bibliography: []
+  abbreviations:
+      ERA5: ECMWF Reanalysis Version 5
+      CMIP6: Coupled Model Intercomparison Project Phase 6
+      AMIP6: Atmospherical Model Intercomparison Project Phase 6
+      PDEs: Partial Differential Equations
+      RHS: Right Hand Side
+      TLDR: Too Long Did Not Read
+      SSP: Shared Socioeconomic Pathways
+      CDS: Climate Data Store
+      ARIMA: Autoregressive Integrated Moving Average
+      EO: Earth Observation
+      EVT: Extreme Value Theory
+      GP: Gaussian Processes
+      GEVD: Generalized Extreme Value Distribution
+      GPD: Generalized Pareto Distribution
+      PPL: Probabilistic Programming Language
+      MLE: Maximum Likelihood Expectation
+      MAP: Maximum A Posteriori
+      MCMC: Markov Chain Monte Carlo
+      HMC: Hamiltonian Monte Carlo
+      TS: Time Series
+      DLM: Dynamical Linear Model
+      BDLM: Bayesian Dynamical Linear Model
+      SSM: State Space Model
+      DA: Data Assimilation
 site:
   template: book-theme
   title: Learn More
