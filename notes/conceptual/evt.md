@@ -1,7 +1,7 @@
 ---
 title: Extreme Value Theory
 subject: AI 4 Attribution
-short_title: EVT
+short_title: Extreme Value Theory
 authors:
   - name: J. Emmanuel Johnson
     affiliations:

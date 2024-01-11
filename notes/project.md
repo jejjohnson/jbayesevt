@@ -37,6 +37,9 @@ abbreviations:
 > Most of the current work do manual feature extraction and reduce their statistical models to simple ones.
 > I want to take a more data-driven approach whereby we encode as many different prior knowledge as possible into the model itself, and then use modern inference procedures to find the best parameters.
 > To deal with the small number of samples, we'll adopt more Bayesian inference methods, e.g., MCMC and for the larger number of samples, we'll adopt more approximate Bayesian inference methods, e.g., variational inference.
+>
+> **Note**: this page severely lacks any scientific reasoning and understanding. 
+> I will leave this up for discussion with my colleagues at a later time.
 
 **Application to Attribution**.
 For each of the proposed methods, we can train two models on two scenarios: one with anthropogenic effects and one without.

@@ -1,7 +1,7 @@
 ---
 title: Evaluation
 subject: AI 4 Attribution
-short_title: EVT Eval
+short_title: Evaluation EVT
 authors:
   - name: J. Emmanuel Johnson
     affiliations:

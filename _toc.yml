@@ -3,13 +3,14 @@ root: notes/index.md
 chapters:
   - title: Introduction
     sections:
-      - file: notes/project.md
       - file: notes/litreview.md
-  - title: Theory
+      - file: notes/project.md
+  - title: Conceptual
     sections:
-      - file: notes/theory/evt
-      - file: notes/theory/eval
-      - file: notes/theory/bayes
+      - file: notes/conceptual/evt
+      - file: notes/conceptual/eval
+      - file: notes/conceptual/bayes
+      - file: notes/conceptual/bayes_inf
   - title: Data
     sections:
       - file: notes/data/datasets
