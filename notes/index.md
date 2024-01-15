@@ -16,6 +16,25 @@ keywords: simulations
 
 > A set of notes to catalogue my progress in applying AI for climate attributions.
 
+## Motivation
+
+We know:
+- The climate is changing --> we have observations and climate projections
+- why the climate is changing --> anthropogenic activity
+- one affect of climate change --> more frequent extreme events.
+
+However, we want to know:
+- What...? When...? How...?
+- Can we predict (anticipate the frequency) of extreme events?
+- Human Risk assessment --> ow?
+
+**How ongoing climate change affects the frequency and intensity of the extreme events**.
+
+--> Can we attribute specific covariates to extreme events.
+
+
+***
+## High-Level Table of Contents
 
 ### **Introduction**
 

@@ -36,6 +36,7 @@ project:
       SSM: State Space Model
       DA: Data Assimilation
       IID: Independently, Identically Distributed
+      SOTA: State of the Art
 site:
   template: book-theme
   title: Learn More
