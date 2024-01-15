@@ -1,7 +1,7 @@
 ---
-title: Project Proposal
+title: "Game of Dependencies"
 subject: AI 4 Attribution
-short_title: Proposed Solutions
+short_title: Project Proposal
 authors:
   - name: J. Emmanuel Johnson
     affiliations:
@@ -29,6 +29,56 @@ keywords: simulations
 For each of the proposed methods, we can train two models on two scenarios: one with anthropogenic effects and one without.
 
 ***
+### Foundations
+
+> We will reimplement part I in ([Philip et al, 2020](https://doi.org/10.5194/ascmo-6-177-2020)) where we look at some of the foundations of EVT and demonstrate how we can use modern PPLs for Bayesian inference.
+
+**What's Been Done**.
+The original paper looks at some of the standard probability distributions to model observation data.
+In particular, they look at temperature and precipitation.
+They looked at standard distributions like the Normal distribution as well as long tail distributions like the T-Student distribution.
+The most interesting was their investigation of extreme value distributions like the GEVD and the GPD.
+
+
+**Data Representation**.
+We will use the simplest data representation possible.
+We will spatially aggregate the observations, $y$, to get a time series.
+Then, we will assume the time series is IID.
+$$
+\begin{aligned}
+\mathcal{D} = \{ y_n \}_{n=1}^N, && &&
+y_n\in\mathbb{R}^{D_y}, && &&
+N = N_t
+\end{aligned}
+$$
+
+
+**Model Formulation**.
+We will use the standard Bayesian approach whereby we fit the observations to some staple distributions for extreme values.
+$$
+\begin{aligned}
+\text{Data Likelihood}: && &&
+\boldsymbol{y} &\sim p(\boldsymbol{y}|\boldsymbol{\theta}) \\
+\text{Prior}: && &&
+\boldsymbol{\theta} &\sim p(\boldsymbol{\theta})
+\end{aligned}
+$$
+We will also put priors on the parameters of the distribution, e.g., the mean, $\mu$, the scale, $\sigma$, and the shape, $\xi$.
+
+**What's Lacking**.
+They do not focus on the inference methods that can be used to find the parameters.
+As far as I see, there is no uncertainty quantification in the parameters.
+
+**Proposed Improvements**.
+We can add some Bayesian inference methods on these parametric models.
+We can use alternative inference methods like MCMC or approximate variational inference.
+This will give users more uncertainty quantification of the parameters found.
+We will use modern PPLs which will give users speed and reasonable scalability.
+They also implement a number of standard inference routines that should work out of the box.
+Some examples include MLE, MAP, Laplace Approximation, Variational Inference ([Wingate & Weber, 2013](https://doi.org/10.48550/arXiv.1301.1299), [Ranganath et al, 2013](https://doi.org/10.48550/arXiv.1401.0118)), MCMC, and HMC.
+We will also uphold strict reproducibility standards so that the broader community can engage in further developments of modeling extreme values using modern ML-inspired tools.
+
+***
 
 ### Safe Goal
 
@@ -43,12 +93,25 @@ For example, the authors explored process parameterizations which take a linear 
 They also explored covariates like time and/or temperature.
 
 
+**Data Representation**
+We will continuous to use simple representations by assuming the time series is IID.
+A major difference between this goal and the above goal is to investigate some of the potential covariates which can help separate the dependencies.
+$$
+\begin{aligned}
+\mathcal{D} = \{ y_n\}_{n=1}^N, && && y_n\in\mathbb{R}^{D_y}&& && N=N_sN_t
+\end{aligned}
+$$
+So we will avoid spatiotemporal aggregation (when possible).
+
+**Model Formulation**.
+We will use a hierarchical Bayesian model to try and separate the dependencies viaa  hierarchy of parameters. 
+We will include these covariates inside the process parameterization.
 $$
 \begin{aligned}
 \text{Data Likelihood}: && &&
-\boldsymbol{y} &\sim p(\boldsymbol{y}|\boldsymbol{u},\boldsymbol{\theta},\boldsymbol{\alpha})\\
-\text{Parameterization}: && && 
-\boldsymbol{\theta} &\sim p(\boldsymbol{\theta}|\boldsymbol{u},\boldsymbol{\alpha})\\
+\boldsymbol{y} &\sim p(\boldsymbol{y}|\boldsymbol{\theta},\boldsymbol{x},\mathbf{s},t,\boldsymbol{\alpha})\\
+\text{Process Parameterization}: && && 
+\boldsymbol{\theta} &\sim p(\boldsymbol{\theta}|\boldsymbol{x},\mathbf{s},t,\boldsymbol{\alpha})\\
 \text{Prior Process Hyperparameters}: && &&
 \boldsymbol{\alpha} &\sim p(\boldsymbol{\alpha})
 \end{aligned}
@@ -56,17 +119,12 @@ $$
 
 **What's Lacking**.
 They do not focus on the inference methods that can be used to find the parameters.
-As far as I see, there is no uncertainty quantification in the parameters.
+As far as I see, there is no uncertainty quantification in the parameters of the process nor the hyperparameters of these processes.
 
 
 **Proposed Improvement**. 
-We can add some Bayesian inference methods on these parametric models.
-We can use alternative inference methods like MCMC or approximate variational inference.
-This will give users more uncertainty quantification of the parameters found.
-We will use modern PPLs which will give users speed and reasonable scalability.
-They also implement a number of standard inference routines that should work out of the box.
-Some examples include MLE, MAP, Laplace Approximation, Variational Inference ([Wingate & Weber, 2013](https://doi.org/10.48550/arXiv.1301.1299), [Ranganath et al, 2013](https://doi.org/10.48550/arXiv.1401.0118)), MCMC, and HMC.
-We will also uphold strict reproducibility standards so that the broader community can engage in further developments of modeling extreme values using modern ML-inspired tools.
+Like the above section, we will use modern PPLs which include advanced inference methods.
+In addition, we will thoroughly explore the parameter distributions for the processes and hyperparameters.
 
 ***
 
@@ -86,15 +144,15 @@ This is the method used in ([Garcia et al, 2023](https://doi.org/10.1007/s00382-
 $$
 \begin{aligned}
 \text{Data Likelihood}: && &&
-\boldsymbol{y} &\sim p(\boldsymbol{y}|\boldsymbol{\theta},\boldsymbol{w},\mathbf{x},t,\boldsymbol{\phi},\boldsymbol{\alpha}) \\
-\text{Parameterization}: && && 
-\boldsymbol{\theta} &\sim p(\boldsymbol{\theta}|\boldsymbol{w},\mathbf{x},t,\boldsymbol{\phi},\boldsymbol{\alpha})\\
+\boldsymbol{y} &\sim p(\boldsymbol{y}|\boldsymbol{\theta},\boldsymbol{f},\boldsymbol{x},\mathbf{s},t,\boldsymbol{\phi},\boldsymbol{\alpha}) \\
+\text{Non-Parametric Parameterization}: && && 
+\boldsymbol{\theta} &\sim p(\boldsymbol{\theta}|\boldsymbol{f},\boldsymbol{x},\mathbf{s},t,\boldsymbol{\phi},\boldsymbol{\alpha})\\
 \text{Spatial Process}: && &&
-\boldsymbol{w}_n(\mathbf{x},t) &\sim \mathcal{GP}_n
-\left(\boldsymbol{\mu_\alpha}(\mathbf{x},t), \boldsymbol{k_\alpha}([\mathbf{x},t],[\mathbf{x}',t'])\right) \\
-\text{Spatial Process Prior Hyperparameters}: && &&
+\boldsymbol{f} &\sim \mathcal{GP}
+\left(\boldsymbol{\mu_\phi}(\boldsymbol{x}), \boldsymbol{k_\alpha}([\mathbf{s},t],[\mathbf{s}',t'])\right) \\
+\text{Mean Function Hyperparameters}: && &&
 \boldsymbol{\alpha} &\sim p(\boldsymbol{\alpha}) \\
-\text{Parameterization Prior Hyperparameters}: && &&
+\text{Covariance Function Hyperparameters}: && &&
 \boldsymbol{\phi} &\sim p(\boldsymbol{\phi}) 
 \end{aligned}
 $$

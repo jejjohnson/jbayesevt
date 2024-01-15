@@ -22,7 +22,7 @@ project:
       ARIMA: Autoregressive Integrated Moving Average
       EO: Earth Observation
       EVT: Extreme Value Theory
-      GP: Gaussian Processes
+      GPs: Gaussian Processes
       GEVD: Generalized Extreme Value Distribution
       GPD: Generalized Pareto Distribution
       PPL: Probabilistic Programming Language
@@ -35,6 +35,7 @@ project:
       BDLM: Bayesian Dynamical Linear Model
       SSM: State Space Model
       DA: Data Assimilation
+      IID: Independently, Identically Distributed
 site:
   template: book-theme
   title: Learn More

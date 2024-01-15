@@ -23,6 +23,110 @@ abbreviations:
     CDS: Climate Data Store
 ---
 
+## Rules
+
+### Product Rule
+
+$$
+p(x,y) = p(x|y)p(y) = p(y|x)p(x)
+$$
+
+***
+### Sum Rule
+
+$$
+p(y) = \int_\mathcal{X}p(x,y)dx=\int_\mathcal{X}p(x|y)p(y)dx
+$$
+
+***
+### Bayes Rules
+
+$$
+p(x|y) = \frac{1}{Z}p(y|x)p(x)
+$$
+
+where $Z:=p(y)=\int_\mathcal{X}p(y,x)dx$
+
+
+### Predictive Posterior
+
+$$
+\begin{aligned}
+p(u^*|u) &= \int_\theta p(u^*|\theta)p(\theta|u)d\theta \\
+&= \frac{1}{N}\sum_{n=1}^N
+p(u^*|\theta_n), && && \theta_n \sim p(\theta|u) && n=1,2,\ldots,N
+\end{aligned}
+$$
+
+
+:::{note} Example I: Data & Parameters
+:class: dropdown
+$$
+\begin{aligned}
+\text{Joint Distribution}: && && 
+p(\theta,\mathcal{D}) &= p(\mathcal{D}|\theta)p(\theta) \\
+\text{Posterior}: && &&
+p(\theta|\mathcal{D}) &= \frac{1}{Z}p(\mathcal{D}|\theta)p(\theta) \\
+\text{Marginal Likelihood}: && &&
+p(\mathcal{D}) &= \int_\theta p(\mathcal{D}|\theta)p(\theta)d\theta
+\end{aligned}
+$$
+:::
+
+:::{note} Example II: Conditional Data & Parameters
+:class: dropdown
+
+$$
+\begin{aligned}
+\text{Joint Distribution}: && && 
+p(\theta,x,y) &= p(y|x,\theta)p(\theta) \\
+\text{Posterior}: && &&
+p(\theta|x,y) &= \frac{1}{Z}p(y|x,\theta)p(\theta) \\
+\text{Marginal Likelihood}: && &&
+p(y) &= \int_\theta p(y|x,\theta)p(\theta)d\theta
+\end{aligned}
+$$
+
+:::
+
+
+:::{note} Example III: Latent Variables
+:class: dropdown
+
+$$
+\begin{aligned}
+\text{Joint Distribution}: && && 
+p(\theta,z,y) &= p(y|z,\theta)p(\theta)p(z) \\
+\text{Posterior}: && &&
+p(\theta|z,y) &= \frac{1}{Z}p(y|z,\theta)p(\theta)p(z) \\
+\text{Marginal Likelihood}: && &&
+p(y) &= \int_\theta\int_\mathcal{Z} p(y|z,\theta)p(\theta)p(z)dzd\theta
+\end{aligned}
+$$
+
+:::
+
+
+:::{note} Example IV: Hierarchical Models
+:class: dropdown
+
+$$
+\begin{aligned}
+\text{Joint Distribution}: && && 
+p(\theta,\alpha,y) &= p(y|\theta,\alpha)p(\theta|\alpha)p(\alpha) \\
+\text{Posterior}: && &&
+p(\theta,\alpha|y) &= \frac{1}{Z}p(y|\theta,\alpha)p(\theta|\alpha)p(\alpha) \\
+\text{Marginal Likelihood}: && &&
+p(y) &= \int_\alpha\int_\theta p(y|\theta,\alpha)p(\theta|\alpha)p(\alpha)d\theta d\alpha
+\end{aligned}
+$$
+
+:::
+
+
+
+
+***
 ## Idea
 
 A model is something that links inputs to outputs. If we are given data, $X \in \mathbb{R}^{NxD}$, and observations, $y$, we ideally would want to know these two entities are related. That relationship (or transformation) from the data $X$ to the observations $y$ is what we would call a model, $\mathcal{M}$. 

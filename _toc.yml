@@ -25,3 +25,6 @@ chapters:
       - file: notes/cookbook/filtering
       - file: notes/cookbook/anomalies
       - file: notes/cookbook/spatial_mean
+  - title: Appendix
+    sections:
+      - file: notes/appendix/notation
