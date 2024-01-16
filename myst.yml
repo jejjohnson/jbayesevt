@@ -22,14 +22,16 @@ project:
       ARIMA: Autoregressive Integrated Moving Average
       EO: Earth Observation
       EVT: Extreme Value Theory
-      GPs: Gaussian Processes
       GEVD: Generalized Extreme Value Distribution
+      EVD: Extreme Value Distribution
       GPD: Generalized Pareto Distribution
+      GP: Gaussian Process
       PPL: Probabilistic Programming Language
       MLE: Maximum Likelihood Expectation
       MAP: Maximum A Posteriori
       MCMC: Markov Chain Monte Carlo
       HMC: Hamiltonian Monte Carlo
+      STS: Structured Time Series
       TS: Time Series
       DLM: Dynamical Linear Model
       BDLM: Bayesian Dynamical Linear Model
@@ -37,6 +39,18 @@ project:
       DA: Data Assimilation
       IID: Independently, Identically Distributed
       SOTA: State of the Art
+      CRS: Coordinate Reference System
+      ODE: Ordinary Differential Equation
+      EnsKF: Ensemble Kalman Filter
+      EKF: Extended Kalman Filter
+      UKF: Unscented Kalman Filter
+      ADF: Assumed Density Filter
+      KF: Kalman Filter
+      DL: Deep Learning
+      ML: Machine Learning
+      BIC: Bayesian Information Criteria
+      AIC: Akaike information criterion
+      AI: Artificial Intelligence
 site:
   template: book-theme
   title: Learn More

@@ -167,6 +167,24 @@ See [wiki](https://en.wikipedia.org/wiki/Q–Q_plot) for more details.
 
 ### Return Period
 
+We can extrapolate an distribution by computing the $p$-return level.
+This represents the high quantile for which the probability that the maximym exceeds this quantile is $1/p$.
+This concept is known as the **return period**.
+The **return period** of a particular event is the inverse probability that the event will be exceeded in any given year.
+For example, the $p$-year return level is associated with a return period of $p$ years.
+The $1/p$ return level is the $1-p$ quantile of an arbitrary quantile function for a distribution.([Mahmoudian & Mahammadzadeh, 2014](https://doi.org/10.1007/s10687-014-0180-2)).
+
+
+
+To compute the return level of $y_p$ s.t. the distribution, $\text{Quantile}(p)=1-p$.
+We can solve for $p$ which results in the following formula.
+$$
+\begin{aligned}
+\text{Distribution}(y_p) &= 1 - p\\
+y_p &= \text{Distribution}^{-1}(1-p)=\text{Quantile}(1-p)
+\end{aligned}
+$$
+
 
 
 
@@ -182,3 +200,57 @@ Example of return period for temperature. [[Source: MetOffice](https://www.metof
 This is also known as the *recurrence interval* or *repeat interval* which is an average time or an estimated average time between events.
 In the case of extreme events, these can include floods, heatwaves, or droughts.
 See [wiki](https://en.wikipedia.org/wiki/Return_period) for more details.
+
+:::{note} Example: GEVD
+:class: dropdown
+The return period is a nifty tool for making predictions of along the tails of the distribution.
+We simply need the [quantile function](https://en.wikipedia.org/wiki/Quantile_function) for the arbitrary distribution.
+The quantile function maps some input, $u$, to a threshold value $y$ so that the probability of $y$ being less than or equal than $y$ is $p$.
+$$
+\text{Q}:[0,1] \rightarrow \mathbb{R}
+$$
+We can an example for the **GEVD**.
+For the GEVD, we have the quantile function defined as
+$$
+\text{Q}_{GEVD}(p;\mu,\sigma,\xi) = 
+\begin{cases}
+\mu - \frac{\sigma}{\xi}
+\left[ 1 - \left( - \log p\right)^{-\xi} \right], && \xi \neq 0 \\
+\mu - \sigma\log\left( - \log p\right), && \xi = 0
+\end{cases}
+$$
+One can easily find this function (along with many others) in a [wiki](https://en.wikipedia.org/wiki/Generalized_extreme_value_distribution) or any similar resource.
+Now, we simply plug in the return level, i.e., $1-p$, into the quantile function
+$$
+\text{Q}_{GEVD}(1-p;\mu,\sigma,\xi) 
+\begin{cases}
+\mu - \frac{\sigma}{\xi}
+\left\{ 1 - \left[ - \log(1-p)\right]^{-\xi} \right\}, && \xi \neq 0 \\
+\mu - \sigma\log\left\{ - \log(1 - p)\right\}, && \xi = 0
+\end{cases}
+$$
+
+:::
+
+
+***
+
+### Expected Shortfall
+
+Ultimately, the goal of EVT is to compute the value at risk.
+We can derive the expected shortfall (conditional rv).
+$$
+y_p = \mu - \frac{\sigma}{\xi}\left[ 1 - \left(\frac{N}{N_\mu} (1 - p) \right)^{-\xi} \right]
+$$
+
+where:
+
+* $y_p$ - the random variable
+* $\mu$ - the threshold (in percentage terms)
+* $N$ - number of observations
+* $N_\mu$ - # of observations that exceed the threshold
+
+We can define the expected shortfall (ES) as:
+$$
+\text{ES} = \frac{y_p}{1 -\xi} + \frac{\sigma - \xi\mu}{1 - \xi}
+$$

@@ -3,6 +3,7 @@ root: notes/index.md
 chapters:
   - title: Introduction
     sections:
+      - file: notes/motivation.md
       - file: notes/litreview.md
       - file: notes/project.md
   - title: Conceptual
@@ -17,6 +18,7 @@ chapters:
       - file: notes/data/data_access
   - title: Modeling
     sections:
+      - file: notes/conceptual/god
       - file: notes/modeling/features_manual
       - file: notes/modeling/features_ai
       - file: notes/modeling/software

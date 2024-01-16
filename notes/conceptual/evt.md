@@ -25,6 +25,25 @@ abbreviations:
 
 ## Introduction
 
+### Definition of Extremes
+
+There is no exact definition of an "extreme".
+This is because it is an arbitrary classification of a real quantity.
+
+**Extreme Indices**.
+These are based on the probability of relative occurrence.
+For example, we could say that the $90^{th}$ percentile of the observed maximum temperature.
+We typically assign a threshold which characterizes the severity of a probable outcome should the threshold be crossed.
+These are typically *moderate extremes* which are in the $5^{th}$ percentile.
+
+**Extreme Value Theory**.
+These are based on a theory called the Extreme Value Theory (EVT).
+This is a more rigorous definition of extremes which involves more theory.
+We need EVT because of the sampling issues associated with these rare events; typically we only observe $<1-5\%$ percentile of the total samples.
+In addition, EVT will allow us to estimate the probability of "values never seen".
+
+
+***
 ### Issues with Extreme Events
 
 
@@ -76,48 +95,153 @@ We also need better uncertainty for data-driven models, i.e., model parameters.
 ***
 ## Formulation
 
-Let's define a spatiotemporal field of a scaler or vector-valued variable of interest, $\boldsymbol{y}$, as:
+**Extreme value distributions** (EVD) are the limiting distributions for the maximum/minimum of large collections of independent random variables from the same arbitrary distribution.
+
+There are many instances of ways to measure extreme values.
+In particular, there are 3 ways of defining extremes: 1) maxima, 2) thresholding, 3) counting exceedences. 
+The  most common methods are the maxima
+
+```{figure} ./assets/evt_trifecta.jpeg
+:name: extremes
+:width: 490px
+:alt: Random image of the beach or ocean!
+:align: center
+
+A figure from Philippe showcasing how we can model extreme values with three different perspectives: 1) maxima values and GEV, 2) tail behaviour with GPD, and 3) counting exceedences with Poisson processes. [[Source]()]
+```
+
+
+
+
+***
+
+### Maxima
+
+Here, we are looking at a maximum or minimum within a block of data (see example [figure](https://analystprep.com/study-notes/wp-content/uploads/2019/10/page-43.jpg))
+A block is a set time period such as a week, a month, a season or a year.
+**Note**: we have to be careful about what we define as a valid time period because some scales exhibit high variability which could be miscategorized as an extreme.
+A typical application is to first find the annual maximum value of a spatiotemporal field.
+
+:::{note} Example: Binning
+:class: dropdown
+
+A very simple example for maximum block estimation is to use a histogram which discretizes a continuous field.
+A good package is the [`boost-histogram``]() package which works well with spatiotemporal data structures like `xarray`.
+
+
+First, let's get some pseudo data
+```python
+y: Array["Ds Dt"] = ...
+```
+Now, we need to describe the spatiotemporal discretization.
+This can be done via [binning](https://boost-histogram.readthedocs.io/en/latest/_images/histogram_design.png).
+```python
+# create bins
+latbins = np.arange(-90, 90, 100)
+lonbins = np.arange(-180, 180, 100)
+tbins = np.arange("1950", "2020", "Yearly")
+```
+Now, we want to take the max value of each bin (TODO)
+```python
+```
+:::
+
+***
+
+#### Generalized Extreme Value Distribution
+
+In either case, the Fisher-Tippet Asymptotic Theorem dictates that extremes generated via a block maxima/minima method will converge to a generalized extreme value distribution (GEVD).
+$$
+p(y) \sim 
+\begin{cases}
+\exp \left[ 1+ \xi 
+\left(\frac{y-\mu}{\sigma}\right)\right]_+^{-1/\xi}, && \xi \neq 0 \\
+\exp \left[-\exp\left( - \frac{y - \mu}{\sigma} \right) \right]_+, && \xi=0
+\end{cases}
+$$
+where $(y)_+=\text{max}\left\{ 0, y \right\}$, $\boldsymbol{\mu}$ is the location parameter, $\boldsymbol{\sigma}$ is the scale parameter and $\boldsymbol{\xi}$ is the shape parameter.
+The location parameter, $\mu$, is not the mean of the distribution but rather the *center* of the distribution.
+Similarly, the scale parameter, $\sigma$, is not the standard deviation of the distribution but rather it governs the size of the deviations about $\mu$.
+The shape parameter $\xi$ describes the tail behaviour of the GEV distribution which is arguably the most important choice as it dictates the shape of the distribution (see [figure](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*cCIER1t6-MCEi9Usyt3D2w.png)). Below, we outline the cases:
+
+**Type I**.
+The Gumbel distribution occurs when $\xi=0$ which results in light tails.
+It is used to model the maximum/minimum of a dataset as it extends over the entire range of real numbers.
+This is similar to other "light tailed" distributions like the Normal, LogNormal, Hyperbolic, Gamma, and Chi-Squared distributions.
+This is common when trying to describe the *domain of attraction* for common distributions like the normal, exponential or gamma.
+This is not typically found in *real world data* but there could be some transformed space whereby this is useful.
+
+**Type II**. The Frechet distribution occurs when $\xi>0$ which results in heavy tails.
+This is similar to other "heavy tailed" distributions like the InverseGamma, LogGamma, T-student, and Pareto distributions.
+This is typically found for variables like precipitation / rainfall estimation, stream flow, flood analysis, human lifespan, financial returns and economic damage.
+
+**Case III**.
+The Weibull distribution occurs when $\xi<0$ which results in bounded tails.
+This is similar to the Beta distribution
+This distribution is common for many variables like temperature, wind speed, pollutants, and sea level.
+It has also been known to 
+
+Once we have the parameters of this distribution, we can calculate the return levels. See my [evaluation guide](./eval.md) for more information on calculating return levels.
 
 $$
 \begin{aligned}
-\boldsymbol{y} = \boldsymbol{y}(\mathbf{x},t) && &&
-\boldsymbol{y}:\mathbb{R}^{D_s}\times\mathbb{R}^+\rightarrow\mathbb{R}^{D_y} && &&
-\mathbf{x}\in\mathcal{X}\subseteq\mathbb{R}^{D_y} && &&
-t \in \mathcal{T} \subseteq\mathbb{R}^{+}
 \end{aligned}
 $$
 
-where $\mathbf{x}$ is the spatial index and $t$ is the temporal index.
+:::{note} Choosing Distributions
+:class: dropdown
+
+On a practical note, we need to decide which case of the shape parameter we need to choose.
+We often choose this manually because there is research which shows that it is quite hard to fit via data.
+There are a few ways we can choose.
+
+**Strong Prior**. The researcher will manually assign the case because they have strong prior knowledge, aka experience, and domain expertise.
+
+**Hypothesis Testing**. One can conduct hypothesis testing by assigning a hypothesis and null hypothesis to each case.
+
+**Conservative**. Fréchet is the most conservative estimate.
+
+:::
 
 ***
 
-### Extreme Values
+### Tail Behaviour
 
+The **peak over threshold** approach is based on the idea of modelling data over a high enough threshold.
+We can select the threshold to trade-off the bias and variance.
+On one hand, one could select a high threshold which will reduce the number of exceedances. This will increase the estimation variance  and the reliability of the parameter estimates.
+On the other hand, one could select a low threshold which will induce a bias because the GPD could fit the exceedances poorly.
 
-***
-
-#### Block Maxima/Minima
-
-Here, we are looking at a maximum or minimum within a block of data.
-A block is a set time period such as a week, a month, a season or a year.
-**Note**: we have to be careful about what we define as a valid time period because some scales exhibit high variability which could be miscategorized as an extreme.
-
-In either case, the theory dictates that extremes generated via a block maxima/minima method will be distributed as a generalized extreme value distribution (GEVD).
-
-***
-
-#### Peak Over Threshold (POT)
-
-***
-
-### Generalized Extreme Value
-
-In the case where we are assume a block maxima method, we have the Generalized Extreme Value Distribution (GEVD).
 $$
-p(\boldsymbol{y}) \sim \left\{ 1+ \boldsymbol{\xi} 
-\left(\frac{\boldsymbol{y}-\boldsymbol{\mu}}{\boldsymbol{\sigma}}\right)\right\}_+^{-1/\xi}
+F_\mu(y) = \text{Pr}\left\{Y - \mu \leq y|Y>\mu\right\} = \frac{F(y+\mu) - F(\mu)}{1 - F(\mu)}, y > 0
 $$
-where $\boldsymbol{\mu}$ is the location parameter, $\boldsymbol{\sigma}$ is the scale parameter and $\boldsymbol{\xi}$ is the shape parameter.
+
+***
+
+#### Generalized Pareto Distribution
+
+According to the Gnedenko-Pickands-Balkema-DeHaan (GPBdH) theorem, using the POT method will converge to the **generalized Pareto distribution** (GPD).
+
+
+**Case I**.
+The ... distribution occurs when $\xi>0$ which results in heavy tails.
+This is similar to "heavy-tailed" distributions like the Pareto-type distributions.
+
+**Case II**.
+The ... distribution occurs when $\xi=0$ which results in light tails.
+This is similar to other "light tail" distributions like the exponential-type distribution.
+
+**Case III**.
+The ... distribution occurs when $\xi<0$ which results in bounded tails.
+This is similar to other "bounded tailed" distributions like the Beta-type distributions.
+
+
+
+***
+
+### Counting Exceedences (**TODO**)
+
+#### Poisson Process (**TODO**)
 
 ***
 
@@ -154,6 +278,123 @@ $$
 $$
 
 and it has a non-degenerate marginal distribution $\forall \mathbf{x}\in\mathcal{X}$, then this defines an extreme-value process.
+
+
+***
+## Problems
+
+```{figure} https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fsrep05884/MediaObjects/41598_2014_Article_BFsrep05884_Fig1_HTML.jpg?as=webp
+:name: extremes
+:width: 490px
+:alt: Random image of the beach or ocean!
+:align: center
+
+A figure showcasing how the location, scale and shape correspond to different distribution shapes. For example, 1) the location parameter can represent the location shifts in maxima, 2) the scale parameter can demonstrate the scale shift in maxima which represents the change in variability, and 3) the shape parameter can demonstrate the distribution shape change which represents a change in symmetry. [[Kodra & Ganguly (2014)](https://doi.org/10.1038/srep05884)]
+```
+***
+
+### IID Assumptions
+
+The issue is with the assumptions placed upon the distributions: **independent, identically distributed random variables**.
+**Independence** assumes that each sample is independent from all other assumptions.
+**Identically distributed** assumes that each sample is taken from the same underlying distribution.
+For example, this assumes that there is no seasonality and assumes that the sequence is stationary.
+There are many ways to correct for this, e.g., remove the seasonality and correct for known trends.
+**Random** assumes that this was sampled from a prob. distribution which varies due to chance. 
+This assumes that the measurements are unbiased estimators of the desired quantity.
+In the case of Earth sciences, this is rarely every true.
+
+
+:::{note} Quickie: Temporal Stationarity
+:class: dropdown
+
+We can remove the temporal stationarity constraint by parameterizing the parameters of the distribution via time, $t$.
+$$
+\theta \sim p(\theta|t,\alpha)
+$$
+Then results in data likelihood that is conditionally independent.
+$$
+p(\alpha,\theta|y) \propto p(y|\theta,t,\alpha)p(\theta|t,\alpha)p(\alpha)
+$$
+
+:::
+
+:::{note} Quickie: Spatial Stationarity
+:class: dropdown
+
+We can remove the spatial stationarity constraint by parameterizing the parameters of the distribution via the coordinates, $\mathbf{s}$.
+$$
+\theta \sim p(\theta|\mathbf{s},\alpha)
+$$
+Then results in data likelihood that is conditionally independent.
+$$
+p(\alpha,\theta|y) \propto p(y|\theta,\mathbf{s},\alpha)p(\theta|\mathbf{s},\alpha)p(\alpha)
+$$
+
+:::
+
+
+***
+
+### Component Events
+
+::::{tab-set}
+:::{tab-item} Case I
+:sync: tab1
+
+We could have 
+
+```{mermaid}
+flowchart LR
+  A(Drought) --> B(Flooding)
+```
+
+However, we could have the true causal relationship between includes some intermediate processes.
+ 
+```{mermaid}
+flowchart LR
+  A(Drought) --> B
+  B(Wildfire) --> C
+  C(Precipitation) --> D(Flooding)
+```
+The best way to prevent this is to have a domain scientist validate the claims of the model.
+However, for extremely complex datasets, one would need a better model or stronger assumptions.
+:::
+:::{tab-item} Case II
+:sync: tab2
+
+```{mermaid}
+flowchart LR
+  A(Sea Level Rise) --> B(Tropical Cyclone Landfall)
+  B --> C(Flooding)
+```
+
+:::
+:::{tab-item} Case III
+:sync: tab2
+
+```{mermaid}
+flowchart LR
+  A(Cumulative Days without Precipitation) --> B(Drought)
+```
+
+:::
+::::
+
+A big problem is the causality associated with the extreme events.
+In particular, we could have **compound extreme events** ([Bevacqua et al, 2021](https://doi.org/10.1029/2021EF002340)).
+These occur when two or more extreme events occur simultaneously or successively.
+
+**Example I**. 
+We could have a sequence of extreme events.
+We could have a *drought* which causes a *wildfire* which causes *precipitation* which causes *flooding*.
+One could very easily get a dataset which links wildfires to floods but this would not be the correct explanation.
+
+**Example II**. 
+We could have a combination of extreme events with underlying conditions that amplify the impact of other events.
+We could have *sea level rise* which causes a *tropical cyclone landfall* which causes *flooding*.
+One could easily connect the notion of sea level rise directly to flooding.
+However, a better explanation might be the fact that the flooding was caused by the cyclone extreme event which was larger due to 
 
 *** 
 
@@ -224,3 +465,11 @@ We can also look at the return values, i.e.g, the sample distribution at a speci
 
 * What is the likelihood of event X with a magnitude Y occuring within a period $\tau$.
 * What is the magnitude of variable X for which there is a  % chance of occurring within a $\tau$ period.
+
+
+***
+
+## Resources
+
+* Presentation by Reider (2014) - [Slides (PDF)](https://www.ldeo.columbia.edu/~amfiore/eescG9910_f14_ppts/Rieder_EVTPrimer.pdf)
+* Extreme Value Theory: A Practical Introduction - Herman (200..) - [Slides (PDF)](http://schumacher.atmos.colostate.edu/gherman/EVT_V1P1.pdf)

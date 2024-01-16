@@ -14,6 +14,8 @@ license: CC-BY-4.0
 keywords: notation
 ---
 
+> Below is my preferred notation for modeling.
+
 ## Spatial Coordinates
 
 $$
@@ -25,9 +27,13 @@ For example, we can have:
 $$
 \begin{aligned}
 \text{Cartesian}: && && \mathbf{s} &= [x,y,z]\\
-\text{Spherical}: && && \mathbf{s} &= [\lambda,\phi, r]
+\text{Spherical}: && && \mathbf{s} &= [\text{Longitude},\text{Latitude},\text{Depth/Altitude}]
 \end{aligned}
 $$
+
+**Note**: in many cases, we have coordinate transformations whereby we can move between different coordinate systems. 
+For example, we can simply move between Cartesian coordinate system and the spherical coordinate system.
+There are also many examples of the Coordinate Reference System (CRS) which allows users to use their own custom system depending upon their field of view.
 
 ## Temporal Coordinates
 
@@ -43,6 +49,8 @@ t &= [\text{seconds}] \\
 t &= [\text{hours}]
 \end{aligned}
 $$
+
+***
 
 
 ## Observations
