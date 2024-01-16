@@ -1,7 +1,7 @@
 ---
-title: Game of Dependence
+title: Overview
 subject: AI 4 Attribution
-short_title: Game of Dependence
+short_title: Overview
 authors:
   - name: J. Emmanuel Johnson
     affiliations:
@@ -12,20 +12,11 @@ authors:
     email: juanjohn@ucm.es
 license: CC-BY-4.0
 keywords: simulations
-abbreviations:
-    ERA5: ECMWF Reanalysis Version 5
-    CMIP6: Coupled Model Intercomparison Project Phase 6
-    AMIP6: Atmospherical Model Intercomparison Project Phase 6
-    PDEs: Partial Differential Equations
-    RHS: Right Hand Side
-    TLDR: Too Long Did Not Read
-    SSP: Shared Socioeconomic Pathways
-    CDS: Climate Data Store
 ---
 
 ## Whirlwind Tour
 
-**Extreme Value Data Likelihoods**. 
+[**Extreme Value Data Likelihoods**](./covariates.md). 
 We will explore some staple data likelihoods for modeling extreme values. We can include some standard distributions like the Normal and LogNormal, more long-tail distributions like the T-Student and Stable Distribution, and also more extreme value specific distributions like GEVD and GPD. We will directly find the best parameters of these distributions given observations of extreme values . We will explore various methods for extracting extreme values from spatiotemporal data like block maxima method or the peak-over-threshold (POT) method. We will look at advanced inference methods using the `numpyro` library to estimate the parameters. We will explore different analysis techniques like the quality of data fit (p-p plot, q-q plot, PDFs, CDFs) and return periods to make predictions about unseen extremes. We will also do an exploratory analysis to characterize the autocorrelations in space and time. In addition, we will explore different standardized ad-hoc feature extraction techniques to extract IID data, i.e., the residuals. Some examples include removing trends like the climatology, appropriate time scale aggregation, appropriate spatial scale aggregation, filtering and differencing.
 
 **Covariate Effects**.

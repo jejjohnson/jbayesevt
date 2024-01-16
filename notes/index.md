@@ -34,10 +34,10 @@ In this section, you'll find:
 
 In this section, you'll find a brief outline of some ideas I deem conceptual important to understand from on an abstract level.
 * [extreme value theory](./conceptual/evt.md) - I go over some of the important theorems and concepts.
-* [evaluating the extreme value family distribution](./conceptual/eval.md) - I go over some of the staple methods for analysis and evaluation for these types of distributions and parameter estimation.
-* [Bayesian modeling](./conceptual/bayes.md) - I outline some important concepts of Bayes rule. 
+* [evaluating the extreme value family distribution](conceptual/eve.md) - I go over some of the staple methods for analysis and evaluation for these types of distributions and parameter estimation.
+* [Bayesian modeling](modeling/bayes.md) - I outline some important concepts of Bayes rule. 
 I also include hierarchical Bayesian models which will be an important for this work.
-* [Bayesian inference](./conceptual/bayes_inf.md) - I do an overview of some of the staple methods for finding the best parameters.
+* [Bayesian inference](modeling/bayes_inf.md) - I do an overview of some of the staple methods for finding the best parameters.
 
 
 ***

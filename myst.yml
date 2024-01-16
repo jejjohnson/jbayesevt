@@ -51,6 +51,9 @@ project:
       BIC: Bayesian Information Criteria
       AIC: Akaike information criterion
       AI: Artificial Intelligence
+      ENSO: El Niño-Southern Oscillation
+      PDO: Pacific Decadal Oscillation
+      NAO: North Atlantic Oscillation
 site:
   template: book-theme
   title: Learn More

@@ -121,11 +121,18 @@ Here, we are looking at a maximum or minimum within a block of data (see example
 A block is a set time period such as a week, a month, a season or a year.
 **Note**: we have to be careful about what we define as a valid time period because some scales exhibit high variability which could be miscategorized as an extreme.
 A typical application is to first find the annual maximum value of a spatiotemporal field.
+We could ask some questions like:
+* In a given period/patch, how likelihood is an exceedance of a specific threshold?
+* What threshold can be expected to be exceeded, on average, once every N period/patch?
 
-:::{note} Example: Binning
+An advantage of this method is that it is simple to apply and easy to interpret.
+However, some advantages of this method are that we remove a lot of information which results in framework is not as often directly useful and it is not the most efficient use of a spatiotemporal dataset.
+
+:::{note} Practical xample: Binning
 :class: dropdown
 
 A very simple example for maximum block estimation is to use a histogram which discretizes a continuous field.
+We would need to break a continuous field into sufficiently large enough discrete units and take the maximum of each block.
 A good package is the [`boost-histogram``]() package which works well with spatiotemporal data structures like `xarray`.
 
 
@@ -150,7 +157,11 @@ Now, we want to take the max value of each bin (TODO)
 
 #### Generalized Extreme Value Distribution
 
-In either case, the Fisher-Tippet Asymptotic Theorem dictates that extremes generated via a block maxima/minima method will converge to a generalized extreme value distribution (GEVD).
+In either case, the Fisher-Tippet Asymptotic Theorem (see [wiki](https://en.wikipedia.org/wiki/Fisher–Tippett–Gnedenko_theorem) | [youtube](https://www.youtube.com/watch?v=MoSb0TvlJUo)) dictates that extremes generated via a block maxima/minima method will converge to a generalized extreme value distribution (GEVD).
+$$
+\lim_{n\rightarrow\infty}M_n \sim \text{GEVD}(\mu,\sigma,\xi)
+$$
+This basically says that your provided your underlying probability distribution function, $p(\cdot)$, of a random variable, $y$, is not highly unsual, regardless of what $p(\cdot)$ is, and provided that the t$n$ is sufficiently large, maxima $\{y\}_+$ samples of size $n$ drawn from $p(\cdot)$ will be distributed as the GEVD.
 $$
 p(y) \sim 
 \begin{cases}
@@ -181,7 +192,7 @@ This is similar to the Beta distribution
 This distribution is common for many variables like temperature, wind speed, pollutants, and sea level.
 It has also been known to 
 
-Once we have the parameters of this distribution, we can calculate the return levels. See my [evaluation guide](./eval.md) for more information on calculating return levels.
+Once we have the parameters of this distribution, we can calculate the return levels. See my [evaluation guide](eve.md) for more information on calculating return levels.
 
 $$
 \begin{aligned}
@@ -207,32 +218,55 @@ There are a few ways we can choose.
 
 ### Tail Behaviour
 
-The **peak over threshold** approach is based on the idea of modelling data over a high enough threshold.
+Often times, we are not interested in the maximum values over a period/block.
+There are many instances where there is a specific threshold where all values above/below are of interest/concern.
+In this scenario, we may be interested in using the *peaks-over-threshold* (PIT) method.
+The POT approach is based on the idea of modelling data over a high enough threshold.
 We can select the threshold to trade-off the bias and variance.
-On one hand, one could select a high threshold which will reduce the number of exceedances. This will increase the estimation variance  and the reliability of the parameter estimates.
-On the other hand, one could select a low threshold which will induce a bias because the GPD could fit the exceedances poorly.
-
 $$
 F_\mu(y) = \text{Pr}\left\{Y - \mu \leq y|Y>\mu\right\} = \frac{F(y+\mu) - F(\mu)}{1 - F(\mu)}, y > 0
 $$
+On one hand, one could select a high threshold which will reduce the number of exceedances. This will increase the estimation variance and the reliability of the parameter estimates.
+However, this will result in a lower bias because we would get a better approximation of the GPD, i.e., less values --> higher variance, less bias.
+On the other hand, one could select a lower threshold which will induce a bias because the GPD could fit the exceedances poorly because we have more values, i.e., more values --> less variance, higher bias.
+
+The advantage of this method is that it creates a relevant threshold of interest and it is an efficient use of data because we don't remove information.
+The disadvantages of this method is that it is harder to implement and it is difficult to know when the conditions of the theory have been satisfied.
+
+**Note**: a threshold can be selected by choosing a range of values and seeing which one of them provide a more stable estimation for other parameters. 
+In other words, the estimates for the other parameters should be more or less similar.
 
 ***
 
 #### Generalized Pareto Distribution
 
-According to the Gnedenko-Pickands-Balkema-DeHaan (GPBdH) theorem, using the POT method will converge to the **generalized Pareto distribution** (GPD).
+According to the Gnedenko-Pickands-Balkema-DeHaan (GPBdH) theorem (see [wiki](https://en.wikipedia.org/wiki/Pickands–Balkema–De_Haan_theorem) | [youtube](https://www.youtube.com/watch?v=MoSb0TvlJUo)), using the POT method will converge to the **generalized Pareto distribution** (GPD) ([Gilleland & Katz, 2016](10.18637/jss.v072.i08)), i.e.
 
+$$
+\lim_{u\rightarrow\infty} F_u(y) \sim \text{GPD}(\mu, \sigma,\xi)
+$$
+This basically says that your provided your underlying probability distribution function, $p(\cdot)$, of a random variable, $y$, is not highly unsual, regardless of what $p(\cdot)$ is, and provided that the threshold $u$ is sufficiently large, exceedances of $u$ will be distributed as the Generalized Pareto Distribution (GPD).
+$$
+p(y) \sim 
+\begin{cases}
+1 - \left[ 1 + \xi \left( \frac{y - u}{\sigma_u} \right)\right]_+^{-1/xi}, && \xi \neq 0 \\
+1 - \left[ \exp\left(- \frac{y - u}{ \sigma_u}\right)\right]_+, && \xi=0
+\end{cases}
+$$
+where $u$ is the high threshold st $y>u$, $\sigma_u>0$ is the scale parameter which depends on the threshold of $u$, and $0<\xi<0$ is a the shape parameter.
+Similar to the GEVD, the shape parameter, $\xi$, determines the shape of the distribution and it is often very hard to fit.
+We outline some staple types of distributions defined by the shape parameter below.
 
 **Case I**.
-The ... distribution occurs when $\xi>0$ which results in heavy tails.
+The Pareto distribution occurs when $\xi>0$ which results in heavy tails.
 This is similar to "heavy-tailed" distributions like the Pareto-type distributions.
 
 **Case II**.
-The ... distribution occurs when $\xi=0$ which results in light tails.
+The expontial distribution occurs when $\xi\rightarrow 0$ which results in light tails.
 This is similar to other "light tail" distributions like the exponential-type distribution.
 
 **Case III**.
-The ... distribution occurs when $\xi<0$ which results in bounded tails.
+The Beta distribution occurs when $\xi<0$ which results in bounded tails.
 This is similar to other "bounded tailed" distributions like the Beta-type distributions.
 
 
@@ -242,6 +276,10 @@ This is similar to other "bounded tailed" distributions like the Beta-type distr
 ### Counting Exceedences (**TODO**)
 
 #### Poisson Process (**TODO**)
+
+$$
+p\{N>0\} = 1 - \exp(-n\lambda)
+$$
 
 ***
 
@@ -281,193 +319,7 @@ and it has a non-degenerate marginal distribution $\forall \mathbf{x}\in\mathcal
 
 
 ***
-## Problems
 
-```{figure} https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fsrep05884/MediaObjects/41598_2014_Article_BFsrep05884_Fig1_HTML.jpg?as=webp
-:name: extremes
-:width: 490px
-:alt: Random image of the beach or ocean!
-:align: center
-
-A figure showcasing how the location, scale and shape correspond to different distribution shapes. For example, 1) the location parameter can represent the location shifts in maxima, 2) the scale parameter can demonstrate the scale shift in maxima which represents the change in variability, and 3) the shape parameter can demonstrate the distribution shape change which represents a change in symmetry. [[Kodra & Ganguly (2014)](https://doi.org/10.1038/srep05884)]
-```
-***
-
-### IID Assumptions
-
-The issue is with the assumptions placed upon the distributions: **independent, identically distributed random variables**.
-**Independence** assumes that each sample is independent from all other assumptions.
-**Identically distributed** assumes that each sample is taken from the same underlying distribution.
-For example, this assumes that there is no seasonality and assumes that the sequence is stationary.
-There are many ways to correct for this, e.g., remove the seasonality and correct for known trends.
-**Random** assumes that this was sampled from a prob. distribution which varies due to chance. 
-This assumes that the measurements are unbiased estimators of the desired quantity.
-In the case of Earth sciences, this is rarely every true.
-
-
-:::{note} Quickie: Temporal Stationarity
-:class: dropdown
-
-We can remove the temporal stationarity constraint by parameterizing the parameters of the distribution via time, $t$.
-$$
-\theta \sim p(\theta|t,\alpha)
-$$
-Then results in data likelihood that is conditionally independent.
-$$
-p(\alpha,\theta|y) \propto p(y|\theta,t,\alpha)p(\theta|t,\alpha)p(\alpha)
-$$
-
-:::
-
-:::{note} Quickie: Spatial Stationarity
-:class: dropdown
-
-We can remove the spatial stationarity constraint by parameterizing the parameters of the distribution via the coordinates, $\mathbf{s}$.
-$$
-\theta \sim p(\theta|\mathbf{s},\alpha)
-$$
-Then results in data likelihood that is conditionally independent.
-$$
-p(\alpha,\theta|y) \propto p(y|\theta,\mathbf{s},\alpha)p(\theta|\mathbf{s},\alpha)p(\alpha)
-$$
-
-:::
-
-
-***
-
-### Component Events
-
-::::{tab-set}
-:::{tab-item} Case I
-:sync: tab1
-
-We could have 
-
-```{mermaid}
-flowchart LR
-  A(Drought) --> B(Flooding)
-```
-
-However, we could have the true causal relationship between includes some intermediate processes.
- 
-```{mermaid}
-flowchart LR
-  A(Drought) --> B
-  B(Wildfire) --> C
-  C(Precipitation) --> D(Flooding)
-```
-The best way to prevent this is to have a domain scientist validate the claims of the model.
-However, for extremely complex datasets, one would need a better model or stronger assumptions.
-:::
-:::{tab-item} Case II
-:sync: tab2
-
-```{mermaid}
-flowchart LR
-  A(Sea Level Rise) --> B(Tropical Cyclone Landfall)
-  B --> C(Flooding)
-```
-
-:::
-:::{tab-item} Case III
-:sync: tab2
-
-```{mermaid}
-flowchart LR
-  A(Cumulative Days without Precipitation) --> B(Drought)
-```
-
-:::
-::::
-
-A big problem is the causality associated with the extreme events.
-In particular, we could have **compound extreme events** ([Bevacqua et al, 2021](https://doi.org/10.1029/2021EF002340)).
-These occur when two or more extreme events occur simultaneously or successively.
-
-**Example I**. 
-We could have a sequence of extreme events.
-We could have a *drought* which causes a *wildfire* which causes *precipitation* which causes *flooding*.
-One could very easily get a dataset which links wildfires to floods but this would not be the correct explanation.
-
-**Example II**. 
-We could have a combination of extreme events with underlying conditions that amplify the impact of other events.
-We could have *sea level rise* which causes a *tropical cyclone landfall* which causes *flooding*.
-One could easily connect the notion of sea level rise directly to flooding.
-However, a better explanation might be the fact that the flooding was caused by the cyclone extreme event which was larger due to 
-
-*** 
-
-## Algorithm
-
-
-### 1 - Define Interested Processes
-
-
-We need to define the extremes we are intersted in as well as the processes we believe cater to those extremes.
-For example, we may be interested in the extremes for precipitation so this would be our *Quantity of Interest*.
-We also believe that the Mediterranean warming and Jet Stream location are processes which contribute to the precipitation.
-
-**Note**: Not all extreme events are extensions of non-extreme phenomena!
-
-***
-
-### 2 - Analyze Spatiotemporal Correlations.
-
-We need examine how the spatial and temporal dimensions effect each of the observations.
-This can come from prior knowledge or from general assumptions.
-For example, let's say we have some scattered data at irregular locations.
-We may propose that the precipitation is independent of the neighboring weather stations.
-However, we propose that the temperature at neighboring locations is informative.
-We can do the same for the time domain.
-
-Some widely used tools for detecting the spatial variation is a variogram or information theory metrics.
-For time series, we can use the AutoCorrelation function (ACF) or information theory metrics as well.
-
-***
-
-### 3 - Get Samples for Data
-
-Now, we need to acquire samples, preferably IID, but sometimes this is impossible.
-From the traditional EVT system, we can use block maximum method over space and time. 
-We could also the use Peak Over Threshold (POT) method.
-
-***
-
-### 4 - Describe Extreme Value Data Distribution
-
-We need to describe the data distribution for the extreme values.
-For example, we could use the GEVD if we are using the block maximal method.
-We could also use the GPD for the POT method.
-
-We also need to describe how the parameters are related. 
-For example, we could use a simple parametric model.
-We could also use a hierarchical model.
-We could also use a dynamical model.
-
-***
-
-### 5 - Fit Parameters of Model
-
-This involves selecting the inference method we wish to use to find the posterior distribution given our model.
-
-***
-
-### 6 - Analysis
-
-This is the most important part.
-We can do some post analysis on the distribution of parameters.
-We can look at the best fit, i.e., the data likelihood.
-We can also look at the return values, i.e.g, the sample distribution at a specific cumulative probability.
-
-
-**Questions**:
-
-* What is the likelihood of event X with a magnitude Y occuring within a period $\tau$.
-* What is the magnitude of variable X for which there is a  % chance of occurring within a $\tau$ period.
-
-
-***
 
 ## Resources
 

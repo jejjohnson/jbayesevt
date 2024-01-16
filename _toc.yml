@@ -9,18 +9,29 @@ chapters:
   - title: Conceptual
     sections:
       - file: notes/conceptual/evt
-      - file: notes/conceptual/eval
-      - file: notes/conceptual/bayes
-      - file: notes/conceptual/bayes_inf
+      - file: notes/conceptual/evp
+      - file: notes/conceptual/eva
+      - file: notes/conceptual/eve
+  - title: Game of Dependencies
+    sections:
+      - file: notes/god/god
+      - file: notes/god/basics
+      - file: notes/god/covariates
+      - file: notes/god/spatiotemporal
+      - file: notes/god/dynamics
+      - file: notes/god/latent
+      - file: notes/god/transfer
   - title: Data
     sections:
       - file: notes/data/datasets
       - file: notes/data/data_access
   - title: Modeling
     sections:
-      - file: notes/conceptual/god
+      - file: notes/modeling/bayes
+      - file: notes/modeling/bayes_inf
       - file: notes/modeling/features_manual
       - file: notes/modeling/features_ai
+      - file: notes/modeling/ai_forecast
       - file: notes/modeling/software
   - title: Cookbook
     sections:
@@ -30,3 +41,4 @@ chapters:
   - title: Appendix
     sections:
       - file: notes/appendix/notation
+      - file: notes/appendix/glossary
