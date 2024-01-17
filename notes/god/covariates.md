@@ -219,3 +219,116 @@ We could even use sampling methods like Markov Chain Monte-Carlo (MCMC).
 **Ocean Environments** - [Jonathan & Ewans, 2013](https://doi.org/10.1016/j.oceaneng.2013.01.004)
 
 :::
+
+
+## PseudoCode
+
+***
+#### Model
+
+Recall, we are using a Gaussian likelihood that describes our observations.
+$$
+\boldsymbol{y} \sim \mathcal{N}(\boldsymbol{y}|\boldsymbol{\mu},\boldsymbol{\sigma})
+$$
+However, we recognize that a single parameter, $\boldsymbol{\mu}$, is too simple describe the complete complexity of the system. Let’s assume we have our covariate of interest, $\boldsymbol{x}$, which we think is related to our observations, $\boldsymbol{y}$. We can write a linear function which relates a parameter of our data likelihood to this covariate.
+
+$$
+\begin{aligned}
+\boldsymbol{\mu}(\boldsymbol{x};\boldsymbol{\theta}) &= \mathbf{w}_1\boldsymbol{x}_1 + 
+\mathbf{w}_2\boldsymbol{x}_2 + 
+\ldots + 
+\mathbf{w}_{D_x}\boldsymbol{x}_{D_x} + \mathbf{b} = \mathbf{W}^\top\boldsymbol{x} + b
+\end{aligned}
+$$
+
+Where $\boldsymbol{\theta}=\{\mathbf{W},b\}$ are the learnable parameters. This mean parameter
+
+**Note**: There are many things we can *improve*. For example, we can increase the model complexity, e.g., a basis function or a nonlinear model. We could also add more covariates.
+
+```python
+def mean_function(
+		x: Array["Dx"], weight: Array["Dy Dx"], bias: Array["Dy"]
+	) -> Array["Dy"]:
+    return weight @ x + bias
+
+def model(x: Array["Dx"], y: Array["Dy"]=None):
+    # prior parameters
+    weight: Array["Dy Dx"] = sample("weight", dist.Normal(0.0, 1.0))
+    bias: Array["Dy"] = sample("bias", dist.Normal(0.0, 1.0))
+    # process parameterizations
+    mu: Array["Dy"] = mean_function(x, weight, bias) 
+    sigma: Array["Dy"] = sample("sigma", dist.Normal(0.0, 10.0))
+    # data likelihood
+    return sample("y", dist.Normal(mu, sigma), obs=y)
+
+```
+
+
+
+***
+#### Prior Predictive Posterior
+
+
+```python
+# initialize predictive utility
+N = 1_000
+predictive = Predictive(model, num_samples=N)
+# make predictions
+y_pred: Array["N"] = predictive(rng_key, X)["y"]
+```
+
+***
+#### Inference
+
+$$
+p(\boldsymbol{\theta}|y,\boldsymbol{x},\boldsymbol{\alpha}) \sim p(y|\boldsymbol{\theta},\boldsymbol{x},\boldsymbol{\alpha})
+$$
+
+```python
+kernel = NUTS(model)
+num_samples = 2_000
+mcmc = MCMC(kernel, num_warmup=1_000, num_samples=num_samples)
+mcmc.run(key, x=x, y=y)
+mcmc.print_summary()
+```
+
+***
+
+#### Posterior Samples
+
+$$
+\begin{aligned}
+\text{Hyperparameters}: && &&
+\boldsymbol{\alpha}_n &\sim p(\boldsymbol{\alpha}|y,\boldsymbol{\theta,x}) = 
+\int_\theta p(y|\boldsymbol{\theta,x,\alpha})
+p(\boldsymbol{\theta}|\boldsymbol{x,\alpha})
+p(\boldsymbol{\alpha})d\boldsymbol{\theta} \\
+\text{Process Parameters}: && &&
+\boldsymbol{\theta}_n &\sim p(\boldsymbol{\theta}|y,\boldsymbol{\alpha,x}) = 
+\int_\alpha p(y|\boldsymbol{\theta,x,\alpha})
+p(\boldsymbol{\theta}|\boldsymbol{x,\alpha})
+p(\boldsymbol{\alpha})d\boldsymbol{\alpha}
+\end{aligned}
+$$
+
+```python
+# extract posterior samples
+posterior_samples: Dict = mcmc.get_samples()
+# extract individual parameter samples
+alpha: Array["Np Dalpha"] = posterior_samples["alpha"]
+theta: Array["Np Dtheta"] = posterior_samples["theta"]
+```
+
+
+***
+#### Posterior Predictive
+
+```python
+
+# initialize predictive utility
+predictive = Predictive(model, posterior_samples=posterior_samples, return_sites=["y"])
+# make predictions
+X_pred: Array["Nx"] = ...
+y_pred: Array["Np"] = predictive(rng_key, X_pred)["y"]
+```
+

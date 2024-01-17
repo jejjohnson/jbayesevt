@@ -20,63 +20,39 @@ keywords: simulations
 > My primary focus is on improving the modeling capabilities using modern data-driven methodologies.
 > Most of the current work do manual feature extraction and reduce their statistical models to simple ones.
 > I want to take a more data-driven approach whereby we encode as many different prior knowledge as possible into the model itself, and then use modern inference procedures to find the best parameters.
-> To deal with the small number of samples, we'll adopt more Bayesian inference methods, e.g., MCMC and for the larger number of samples, we'll adopt more approximate Bayesian inference methods, e.g., variational inference.
+> These additions will hopefully encode more sensible knowledge of the underlying system whilst also respecting the data structure, e.g., spatial, temporal, covariate, dynamical and latent.
+> To deal with the small number of samples and inherent uncertainty, we'll adopt the pragmatic Bayesian inference methods, e.g., MCMC and for the larger number of samples, we'll adopt more approximate Bayesian inference methods, e.g., variational inference.
+> I hope the tools built here for will be useful for dealing with extremes for Earth sciences in general.
 >
-> **Note**: this page severely lacks any scientific reasoning and understanding. 
-> I will leave this up for discussion with my colleagues at a later time.
 
-**Application to Attribution**.
-For each of the proposed methods, we can train two models on two scenarios: one with anthropogenic effects and one without.
+ **Note**: 
+ this page severely lacks any scientific reasoning and understanding. 
+ I will leave this up for discussion with my colleagues at a later time.
+
 
 ***
-### Foundations
+### Revisiting Foundations
 
-> We will reimplement part I in ([Philip et al, 2020](https://doi.org/10.5194/ascmo-6-177-2020)) where we look at some of the foundations of EVT and demonstrate how we can use modern PPLs for Bayesian inference.
+> Part I of this project is to revisit some of the basics of EVT and implement them within a modern framework.
+> We examine the basics for extracting extreme values including the block maxima and the peak of thresholds.
+> We will look at the basics for modeling extreme values including using custom distributions, e.g., GEVD, GPD, and Poisson processes.
+> We will use some of the standard and SOTA Bayesian inference methods using modern PPLs.
+> See [Basis](./god/basics) for more information.
 
-**What's Been Done**.
-The original paper looks at some of the standard probability distributions to model observation data.
-In particular, they look at temperature and precipitation.
-They looked at standard distributions like the Normal distribution as well as long tail distributions like the T-Student distribution.
-The most interesting was their investigation of extreme value distributions like the GEVD and the GPD.
-
-
-**Data Representation**.
-We will use the simplest data representation possible.
-We will spatially aggregate the observations, $y$, to get a time series.
-Then, we will assume the time series is IID.
 $$
 \begin{aligned}
+\text{Data Representation}: && &&
+y_n &\in\mathbb{R}^{D_y} && &&
 \mathcal{D} = \{ y_n \}_{n=1}^N, && &&
-y_n\in\mathbb{R}^{D_y}, && &&
-N = N_t
-\end{aligned}
-$$
-
-
-**Model Formulation**.
-We will use the standard Bayesian approach whereby we fit the observations to some staple distributions for extreme values.
-$$
-\begin{aligned}
-\text{Data Likelihood}: && &&
-\boldsymbol{y} &\sim p(\boldsymbol{y}|\boldsymbol{\theta}) \\
-\text{Prior}: && &&
+N = N_t \\
+\text{Observation Likelihood}: && &&
+y &\sim p(y|\boldsymbol{\theta}) \\
+\text{Parameter}: && &&
 \boldsymbol{\theta} &\sim p(\boldsymbol{\theta})
 \end{aligned}
 $$
-We will also put priors on the parameters of the distribution, e.g., the mean, $\mu$, the scale, $\sigma$, and the shape, $\xi$.
 
-**What's Lacking**.
-They do not focus on the inference methods that can be used to find the parameters.
-As far as I see, there is no uncertainty quantification in the parameters.
 
-**Proposed Improvements**.
-We can add some Bayesian inference methods on these parametric models.
-We can use alternative inference methods like MCMC or approximate variational inference.
-This will give users more uncertainty quantification of the parameters found.
-We will use modern PPLs which will give users speed and reasonable scalability.
-They also implement a number of standard inference routines that should work out of the box.
-Some examples include MLE, MAP, Laplace Approximation, Variational Inference ([Wingate & Weber, 2013](https://doi.org/10.48550/arXiv.1301.1299), [Ranganath et al, 2013](https://doi.org/10.48550/arXiv.1401.0118)), MCMC, and HMC.
-We will also uphold strict reproducibility standards so that the broader community can engage in further developments of modeling extreme values using modern ML-inspired tools.
 
 ***
 

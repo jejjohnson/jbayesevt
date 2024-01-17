@@ -46,17 +46,68 @@ For example, we could have simple linear functions or more complex non-linear fu
 **Note**: these methods have many names including: statistical data assimilation, statistical inverse problem, (dynamical) latent variables, Bayesian filtering methods (Kalman, Particle), Bayesian hierarchical models, and mixed effects models.
 
 
-### Conditional Dynamical Models
-
-$$
-y_t \sim p\left(y|t;\theta\right)
-$$
 
 
-:::{note} Case Study I: Temperature Tendency  & Scale
+***
+
+## PseudoCode
+
+
+### State Space Model
+
+#### Transition + Emission Model
+
+```python
+def gaussian_hmm(x0, y=None, T=10):
+    # create scan function
+    def transition(z_prev, y_curr):
+        # transition function
+        z_curr = weight @ z_prev + bias
+        z_curr = numpyro.sample('z', dist.Normal(z_curr, 0.1))
+        # observation function
+        y_curr = weight_obs @ z_curr + bias_obs
+        y_curr = numpyro.sample('y', dist.Normal(y_curr, 1), obs=y_curr)
+        return z_curr, (z_curr, y_curr)
+	# create initial condition
+    z0 = sample('z_0', dist.Normal(x0, 1))
+    # scan through
+    _, (z, y) = scan(transition, z0, y, length=T)
+    return (z, y)
+```
+
+
+#### Inference
+
+Here, we simply run through the model which should be the same
+
+```python
+with numpyro.handlers.seed(rng_seed=0):
+    x, y = gaussian_hmm(np.arange(10.))
+assert x.shape == (10,) and y.shape == (10,)
+assert np.all(y == np.arange(10))
+```
+
+Here, we generate some samples using the generative process
+
+```python
+with numpyro.handlers.seed(rng_seed=0):  # generative
+    x, y = gaussian_hmm()
+assert x.shape == (10,) and y.shape == (10,)
+assert np.all(y != np.arange(10))
+```
+
+***
+
+## Literature
+
+::: {seealso} State Space Models
 :class: dropdown
 
-In the paper of [Phillip et al, 2020](https://doi.org/10.5194/ascmo-6-177-2020), they parameterize the mean and scale function using the temperature wrt time. 
-They remove the dependency that the temperature is independent and they try to fit a conditional parametric distribution to explain the anomalies on the temperature values which have a dependency on time.
-So the variable of interest is temperature which varies wrt time.
+- Structural Time Series Model - [](https://github.com/probml/sts-jax)
+- KF, EKF, UKF, ADF - Dynamax - [](https://github.com/probml/dynamax) [](https://github.com/lindermanlab/ssm) [Rank-Reduced](https://arxiv.org/abs/2306.07774) | [OKF](https://github.com/ido90/Optimized-Kalman-Filter) | [Pierre Tandeo](https://github.com/ptandeo/Kalman)
+- NN SSM - [](https://github.com/HazyResearch/spacetime) | [Neural-SSM](https://github.com/qu-gg/torch-neural-ssm) | [DMM Scratch](https://github.com/guxd/deepHMM)
+- Ensemble KF - [](https://github.com/mchoblet/ensemblefilters) [ROAD-KF](https://github.com/ymchen0/ROAD-EnKF) | [Low-Rank 4 Elliptical](https://arxiv.org/abs/2203.05120)
+- Sequential Monte Carlo - [](https://github.com/nchopin/particles) [Parallel Particle Smoothing](https://github.com/AdrienCorenflos/parallel-ps) [Kalman and Gibbs Samplers](https://github.com/AdrienCorenflos/aux-ssm-samplers) [Parallel Sqrt-Root Filters](https://github.com/EEA-sensors/sqrt-parallel-smoothers)
+- Neural ODEs - [](https://github.com/pnkraemer/probdiffeq) [](https://sebastiancallh.github.io/post/neural-ode-weather-forecast/) 
 
+:::

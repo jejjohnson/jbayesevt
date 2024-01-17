@@ -84,3 +84,93 @@ hpdi_mu = hpdi(posterior_mu, quantile=0.90)
 prior_predictive = Predictive(model, num_sample=100)
 prior
 ```
+
+*** 
+
+### Example: MLE vs MAP vs MCMC
+
+```python
+```
+
+***
+
+### Example: Variational Inference
+
+
+**Prior**
+
+$$
+\begin{aligned}
+\text{Prior}: && &&
+\theta &\sim p(\theta) \\
+\text{Data Likelihood}: && &&
+y &\sim p(y|\theta)
+\end{aligned}
+$$
+
+```python
+def model(data):
+    f = numpyro.sample("latent_fairness", dist.Beta(10, 10))
+    with numpyro.plate("N", data.shape[0] if data is not None else 10):
+        numpyro.sample("obs", dist.Bernoulli(f), obs=data)
+```
+
+
+**Variational Posterior**
+
+$$
+q \sim q(\mu, \sigma)
+$$
+
+```python
+def guide(data):
+    alpha_q = numpyro.param("alpha_q", 15., constraint=constraints.positive)
+    beta_q = numpyro.param("beta_q", lambda rng_key: random.exponential(rng_key),
+                           constraint=constraints.positive)
+    numpyro.sample("latent_fairness", dist.Beta(alpha_q, beta_q))
+```
+
+
+**Inference**
+
+$$
+\boldsymbol{\phi}^* = \underset{\boldsymbol{\phi}}{\text{argmin}} \hspace{2mm} \text{ELBO}(\boldsymbol{\phi};y)
+$$
+
+```python
+optimizer = numpyro.optim.Adam(step_size=5e-5)
+svi = SVI(model, guide, optimizer, loss=Trace_ELBO())
+svi_result = svi.run(random.PRNGKey(0), 2000, data)
+params = svi_result.params
+```
+
+**Best Parameters**
+
+
+
+
+
+
+**Approximate Posterior**
+
+
+```python
+# use guide to make predictive
+predictive = Predictive(model, guide=guide, params=params, num_samples=1000)
+samples = predictive(random.PRNGKey(1), data=None)
+```
+
+**Posterior Samples**
+
+```python
+predictive = Predictive(guide, params=params, num_samples=1000)
+posterior_samples = predictive(random.PRNGKey(1), data=None)
+```
+
+**Posterior Predictive Samples**
+
+```python
+# use posterior samples to make predictive
+predictive = Predictive(model, posterior_samples, params=params, num_samples=1000)
+samples = predictive(random.PRNGKey(1), data=None)
+```

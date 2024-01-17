@@ -78,6 +78,30 @@ where the hyperparameters are $\boldsymbol{\alpha} = \{b, \mathbf{w}_1,\mathbf{W
 
 ## Previous Work
 
+:::{seealso} Gaussian Processes
+:class: dropdown
+
+Gaussian Processes
+- Exact
+- Inference - MLE, MAP, Variational, MCMC
+- Scale (Hardware) - Cola, GPUs, Parallel GPUs
+- Scale (Moment)- Inducing Points
+- Covariates - Additive, Seperable, Mixture Kernels
+- Noise - Heteroskedastic
+- Physics Informed - Deep Kernel Learning, Custom Mean Function
+- Scale (Spectral) - RFF
+- Scale (Time Series) - Markovian, Variational Markovian
+- Uncertain Inputs - MC, Taylor (1st, 2nd Order), Unscented, Moment-Matching, GPLVM
+
+Heteroskedastic GP
+- Pymc ex - latent, sparse latent, correlated sparse latent - [](https://www.pymc.io/projects/examples/en/latest/gaussian_processes/GP-Heteroskedastic.html)
+- GPFlow Ex - hetero example - [](https://gpflow.github.io/GPflow/develop/notebooks/advanced/heteroskedastic.html)
+- GPFlow - Custom Likelihood Noise Functions - [](https://gpflow.github.io/GPflow/develop/notebooks/advanced/varying_noise.html)
+- Priors 4 GPs - [](https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations#priors-for-gaussian-processes)
+
+
+:::
+
 :::{seealso} **Max-Stable Processes**
 :class: dropdown
 
@@ -116,3 +140,44 @@ spatial structure indirectly modeled via the EVT parameters distribution, i.e., 
 [Wackernagel, 2003](https://doi.org/10.1007/978-3-662-05294-5)
 
 :::
+
+## PseudoCode
+
+
+### Gaussian Process Model
+
+#### Mean Function
+
+```python
+def mean_function(
+		X: Array["N Dx+Ds+Dt"], weight: Array["Dy Dx"], bias: Array["Dy"]
+	) -> Array["Dy"]:
+    # extract covariates only
+    return weight @ x[:,-2:] + bias
+```
+
+
+```python
+def gp_model(S: Array["N"], T: Array["N"], X: Array["N Dx"], Y: Array["N Dy"]):
+    # mean function hyper parameters
+    mean = numpyro.sample("mean", dist.Normal(0.0, prior_sigma))
+    jitter = numpyro.sample("jitter", dist.HalfNormal(prior_sigma))
+    
+    # hyperparameters for spatial coordinates
+    s_sigma = numpyro.sample("s_sigma", dist.HalfNormal(prior_sigma))
+    s_rho = numpyro.sample("s_rho", dist.HalfNormal(prior_sigma))
+    s_tau = numpyro.sample("s_tau", dist.HalfNormal(prior_sigma))
+    kernel_s = sigma1**2 * kernels.ExpSquared(tau) * kernels.Cosine(rho1)
+
+    # compute kernel
+    kernel = kernel_s(S) + kernel_t(T) + kernel_x(X)
+    # concaténate input
+    input: Array["N 3"] = jnp.vstack([S,T,X])
+
+    # sample Y according to the standard gaussian process formula
+    gp = GaussianProcess(kernel, input, diag=yerr**2 + jitter, mean=mean)
+    numpyro.sample("gp", gp.numpyro_dist(), obs=y)
+
+    if y is not None:
+        numpyro.deterministic("pred", gp.condition(y, true_t).gp.loc)
+```
