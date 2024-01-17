@@ -24,6 +24,8 @@ keywords: simulations
 > In addition, we can include more traditional numerical time steppers for more stable rollouts (Autoregressive applications).
 
 
+
+
 ### State Space Model
 
 Here, we assume that there is a latent variable, $\boldsymbol{z}$, which is described by a dynamical system.
@@ -41,6 +43,7 @@ $$
 where $\boldsymbol{T_\theta}$ is the transition function for the latent variable, $\boldsymbol{z}_t$, and $\boldsymbol{h_\theta}$ is the emission function.
 We are free to make these functions as complex as we see fit.
 For example, we could have simple linear functions or more complex non-linear functions.
+**Note**: these methods have many names including: statistical data assimilation, statistical inverse problem, (dynamical) latent variables, Bayesian filtering methods (Kalman, Particle), Bayesian hierarchical models, and mixed effects models.
 
 
 ### Conditional Dynamical Models

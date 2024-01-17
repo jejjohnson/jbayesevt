@@ -39,3 +39,19 @@ $$
 \boldsymbol{y}|\boldsymbol{z} &\sim p(\boldsymbol{y}|\boldsymbol{\theta},\boldsymbol{z})
 \end{aligned}
 $$
+
+
+**Example Prediction**
+
+$$
+\begin{aligned}
+\text{Sample Hyperparameter}: && &&
+\boldsymbol{\alpha}_n &\sim p(\boldsymbol{\alpha}) \\
+\text{Sample Latent Variable}: && &&
+\boldsymbol{z}_n &\sim p(\boldsymbol{z}) \\
+\text{Process Likelihood}: && &&
+\boldsymbol{\theta}_n &\sim p(\boldsymbol{\theta}|\boldsymbol{z}_n,\alpha_n) \\
+\text{Data Likelihood}: && &&
+y_n &\sim p(y_n|\boldsymbol{\theta}_n,\boldsymbol{z}_n) \\
+\end{aligned}
+$$

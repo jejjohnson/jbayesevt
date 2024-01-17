@@ -105,6 +105,17 @@ This is also known as the *recurrence interval* or *repeat interval* which is an
 In the case of extreme events, these can include floods, heatwaves, or droughts.
 See [wiki](https://en.wikipedia.org/wiki/Return_period) for more details.
 
+
+:::{note} **Interpretations**
+:class: dropdown
+
+**Waiting Time** - The average waiting time until next occurrence of the event in $t$ years.
+
+**Number of Events** - The average number of events occurring within a $T$-year period.
+:::
+
+
+
 :::{note} Example: GEVD
 :class: dropdown
 The return period is a nifty tool for making predictions of along the tails of the distribution.
@@ -154,10 +165,25 @@ $$
 u + \sigma_u \log \left(p\xi_u \right) && \xi = 0
 \end{cases}
 $$
-where $\xi_u$ is the probability of exceeding the threshold.
+where $\xi_u$ is the probability of exceeding the threshold. 
+We can use this to estimate the return level, $y_p$.
+$$
+\hat{y}_p = u + \frac{\hat{\sigma}_u}{\hat{\xi}}
+\left[ \left(\frac{np}{N_u}\right)^{-\hat{\xi}} - 1 \right]
+$$
 
 :::
 
+***
+
+
+### Mean Excess Function
+
+$$
+\mathbb{E}(Y - u|Y>u = \frac{\sigma_u - u\xi}{1 - \xi})
+$$
+
+where the scale parameter, $\sigma_u$, varies linearly in the threshold $u$ and the shape parameter $\xi$ is fixed wrt the threshold $u$.
 
 ***
 

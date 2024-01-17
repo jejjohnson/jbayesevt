@@ -14,20 +14,11 @@ license: CC-BY-4.0
 keywords: simulations
 ---
 
-We know:
+### What Do We Know?
+
 - The climate is changing --> we have observations and climate projections
 - why the climate is changing --> anthropogenic activity
 - one affect of climate change --> more frequent extreme events.
-
-However, we want to know:
-- What...? When...? How...?
-- Can we predict (anticipate the frequency) of extreme events?
-- Human Risk assessment --> hobsow?
-
-**How ongoing climate change affects the frequency and intensity of the extreme events**.
-
---> Can we attribute specific covariates to extreme events.
-
 
 ***
 
@@ -75,6 +66,38 @@ However, we want to know:
 
 A figure showcasing how the location, scale and shape correspond to different distribution shapes. For example, 1) the location parameter can represent the location shifts in maxima, 2) the scale parameter can demonstrate the scale shift in maxima which represents the change in variability, and 3) the shape parameter can demonstrate the distribution shape change which represents a change in symmetry. [[Kodra & Ganguly (2014)](https://doi.org/10.1038/srep05884)]
 ```
+***
+
+### What We Want to Know?
+
+However, we want to know:
+- What...? When...? How...?
+- Can we predict (anticipate the frequency) of extreme events?
+- Human Risk assessment --> hobsow?
+
+**How ongoing climate change affects the frequency and intensity of the extreme events**.
+
+--> Can we attribute specific covariates to extreme events.
+
+***
+
+#### Common Objectives
+
+**Estimation**.
+Can we estimate the value that occurs, on average, once every 1,000 years, i.e., the 1,000 return level.
+
+**Process Identification**.
+Cn we identify environmental covariates that drive extremes.
+
+**Hypothesis Testing**.
+Can we confirm that the likelihood of an extreme event is changing over time?
+
+**Comparisons**.
+Can we determine if two locations are asymptotically dependent?
+
+**Projections**.
+Can we project the change in the $99.9^{th}$ percentile in the year 2050?
+
 
 ***
 
@@ -88,3 +111,14 @@ For example, we have a lot of knowledge about climate change and the Greenhouse 
 We encode this physical knowledge into computer code which reflect our understanding. From this, we can run simulations under different conditions to see *what would happen if...?*
 For example, we can run simulations with and without different forcing scenarios.
 See [my datasets guide](./data/datasets) for more details where I outline some available climate simulations.
+
+
+***
+
+### Why is it Challenging?
+
+Most of our intuition and methodology is built around the mean and standard deviation from the mean.
+However, extremes are rare events and the mean and variance are poor indicators of rare events.
+This is because they don't give us information about the tail of the distribution where rare events live.
+Similarly, measures like correlation are also poor indicators because they are still based around the first 2 moments.
+Thus, we need new and better ways to describe distributions and the dependencies between random variables.

@@ -205,3 +205,17 @@ Here, we have many examples of different inference methods to use.
 For example, we can use simple methods like Maximum Likelihood Estimation (MLE) or Maximum-A-Posterior (MAP). 
 We can use approximate inference methods like Laplace or Variational Inference (VI).
 We could even use sampling methods like Markov Chain Monte-Carlo (MCMC).
+
+
+## Literature Review
+
+::: {seealso} Applications
+:class: dropdown
+
+**Temperature** - [Phillip et al, 2020](https://doi.org/10.5194/ascmo-6-177-2020)
+***
+**Wave Height** - [Wang et al, 2004](https://doi.org/10.1175/1520-0442(2004)017<2368:NAOWCC>2.0.CO;2) | [Sartini et al, 2015](https://doi.org/10.1002/2015JC011061)
+***
+**Ocean Environments** - [Jonathan & Ewans, 2013](https://doi.org/10.1016/j.oceaneng.2013.01.004)
+
+:::

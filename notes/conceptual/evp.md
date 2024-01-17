@@ -27,9 +27,54 @@ abbreviations:
 
 EVT is not a watertight explanation.
 In fact, there are many issues that could occur.
-On one hand, there are issues with the IID assumptions which could limit the amount of data which limits the model correctness.
-On the other hand, there could be some fundamentally wrong explanations which might incorrectly explain our results.
 Below we will outline a few of these issues.
+
+**Spatiotemporal Data**.
+The biggest problem is the inherent data with spatiotemporal interactions.
+There are dependencies, heterogeneity, data sparsity, and uncertainty.
+However, we inherently assume that the data is IID when clearly it is not due to the data structure.
+
+**Limited data**.
+Extreme events are at the tails of the distribution because they are rare events.
+This means that there is not a lot of data which means it is difficult to model.
+This problem is augmented because we do many *ad-hoc* processes to ensure that the data is independent thereby removing samples.
+
+**Dynamical Tendencies**.
+The data is inherently dynamical which means that things (even the definition of an extreme) can change with time.
+
+**Model Convergence**.
+The data is multiscale, non-linear, chaotic and inherently complex.
+We've also seen that we tend to have limited data because we're taking samples from the tails of the distribution.
+This makes it difficult to learn a complex model because we do not have enough samples to learn.
+
+**Causal Explanations**.
+There could be some fundamentally wrong explanations which might incorrectly explain our results.
+
+
+
+
+
+***
+### Potential Solutions
+
+**Better Data Representations**.
+We need data representations that highlight the spatial processes and dynamical processes.
+We also need to utilize multivariate statistics to couple complex processes when making predictions.
+Lastly, we need to include latent variables to capture unseen processes and to reduce the dimensionality of the data which will provide significant speed-ups.
+
+**Better Data-Driven Models**.
+Most of the current literature involving extremes utilize very simple linear models which are not sufficient to capture the complexity of the system.
+We need more expressive models that capture multiscale, nonlinear relationships. 
+They also need to capture the multivariate tendencies.
+Lastly, they need to be fast and scalable otherwise it would not be trustworthy in practice.
+We see that some of the SOTA weather forecasting almost exclusively use some sort of AI algorithm under the hood.
+
+**Better Uncertainty Quantification**.
+We need to be more *pragmatically* Bayesian, meaning be Bayesian for as long as possible until it because too computationally intensive.
+We need to incorporate more parameter and process uncertainties.
+We also need better predictive uncertainty.
+In addition, we need better model uncertainty for physics-based models, e.g., initial conditions, boundary conditions or equations of motions.
+We also need better uncertainty for data-driven models, i.e., model parameters.
 
 ***
 
@@ -161,6 +206,54 @@ In addition (again), one should also try alternative, plausible explanations and
 :::
 ::::
 
+***
+### Modeling Challenges
+
+Because of the issues with the data, we will have issues with the subsequent models.
+The Earth is a vastly complex system: it is multiscale, multivariate, high-dimensional, chaotic, and noisy.
+This means that we need complex models, i.e., nonlinear, expressive, expensive, to be able to model this type of data.
+So, this means that we either need a lot of physics or a lot of data to be able to model this kind of data.
+We already have examples of models with a lot of physics like GCMs and RCMs.
+They are accurate but they are also known to be expensive, slow and so complicated that they can be considered black boxes.
+Data-driven models can learn with a lot of data however, we arrive at the same issue of data that we just described: a vicious cycle.
+
+**Model Form**.
+We need to adopt different strategies for trying to acquire the marginal behaviour by accounting for all dependencies of our problem.
+*Parametric methods* are the easiest to conceptualize and modify.
+They are also easy to incorporate dimensionality reduction techiques to deal with the high-dimensionality and we can also include many covariates if needed.
+However, we will always need to impose a parametric form which could be limiting for inherently functional data, i.e., spatiotemporal fields.
+*Non-parametric methods* are a good alternative because they are general and flexible approaches without strong assumptions.
+However, they are impractical for large dimensions due to the formulation and problem size (curse of dimensionality).
+*Physics-informed methods* could potentially alleviate this but this often can make the models more complicated.
+
+
+
+**Inference**.
+The inference stage could make things complicated.
+There are simpler and faster methods like the *method of moments* (see [example](https://www.linkedin.com/pulse/estimating-population-distribution-parameters-method-moments-andrew-f/) | [example](https://python.plainenglish.io/how-to-use-method-of-moments-like-a-pro-9bbf730f4f0f) | [example](https://radzion.com/blog/probability/method)). 
+However, they are not easy to use for complex methods with covariates and latent processes.
+*MLE or MAP* which are easy to integrate and find solutions.
+However, they impose a parametric form which limits expressivity. In addition, they do not converge to good solutions for high-dimensional data.
+We could use more complex methods like *fully Bayesian inference* which allows one to easily input expert knowledge.
+However, it is not straightforward to converge for larger dimensions and it can be very slow.
+
+
+***
+
+### Multivariate Extremes
+
+::: {seealso} Phillipe Naveau
+:class: dropdown
+
+> Taken from his talk.
+
+*  A Poisson Counting Process can handle Multivariate maxima
+* "Polar Coordinates" can give us independence between the strength of the event and the dependence structure that lives on the simplex
+* The dependence structure does not have explicit expressions (in contrast to the margins and to the Gaussian case)
+* Max-Stable Property ==> Scaling property for the Poisson intensity
+* Conceptually Easy to Go from the Bivariate to the Multivariate
+
+:::
 
 
 ***
@@ -196,7 +289,15 @@ For time series, we can use the AutoCorrelation function (ACF) or information th
 
 ### 3 - Get Samples for Data
 
-Now, we need to acquire samples, preferably IID, but sometimes this is impossible.
+Now, we need to acquire samples.
+This is done by separating the extreme observations for the standard observations.
+For example, if we have a spatiotemporal field of precipitation, we could have different weather regimes.
+Simply precipitation makes up the bulk of observations, storms could make up the rare events, and hurricanes can make up the extreme events.
+
+
+
+
+We preferably IID, but sometimes this is impossible.
 From the traditional EVT system, we can use block maximum method over space and time. 
 We could also the use Peak Over Threshold (POT) method.
 

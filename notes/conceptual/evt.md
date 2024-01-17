@@ -42,55 +42,34 @@ This is a more rigorous definition of extremes which involves more theory.
 We need EVT because of the sampling issues associated with these rare events; typically we only observe $<1-5\%$ percentile of the total samples.
 In addition, EVT will allow us to estimate the probability of "values never seen".
 
-
 ***
-### Issues with Extreme Events
+### Example
+
+For example, if we have a spatiotemporal field of precipitation, we could have different weather regimes.
+Simply precipitation makes up the bulk of observations, storms could make up the rare events, and hurricanes can make up the extreme events.
+One could fit a mean regressor on the thunderstorms (given precipitation) and treat the hurricanes as outliers.
+To estimate the 100-year storm, we would only focus on hurricanes.
+
+```{list-table} Extreme Events
+:header-rows: 1
+:name: extreme-events-breakdown
+
+* - Classification
+  - Percentile
+  - Precipitation
+* - Bulk
+  - 0.95
+  - Precipitation
+* - Rare Events
+  - 0.05
+  - Storms
+* - Extreme Events
+  - 0.01
+  - Hurricanes
+```
 
 
-**Spatiotemporal Data**.
-The biggest problem is the inherent data with spatiotemporal interactions.
-There are dependencies, heterogeneity, data sparsity, and uncertainty.
 
-**Limited data**.
-Extreme events are at the tails of the distribution because they are rare events.
-This means that there is not a lot of data which means it is difficult to model.
-
-**Dynamical**.
-The data is inherently dynamical which means that things (even the definition of an extreme) can change with time.
-
-***
-### Modeling Challenges
-
-Because of the issues with the data, we will have issues with the subsequent models.
-The Earth is a vastly complex system: it is multiscale, multivariate, high-dimensional, chaotic, and noisy.
-This means that we need complex models, i.e., nonlinear, expressive, expensive, to be able to model this type of data.
-So, this means that we either need a lot of physics or a lot of data to be able to model this kind of data.
-We already have examples of models with a lot of physics like GCMs and RCMs.
-They are accurate but they are also known to be expensive, slow and so complicated that they can be considered black boxes.
-Data-driven models can learn with a lot of data however, we arrive at the same issue of data that we just described: a vicious cycle.
-
-
-***
-### Potential Solutions
-
-**Better Data Representations**.
-We need data representations that highlight the spatial processes and dynamical processes.
-We also need to utilize multivariate statistics to couple complex processes when making predictions.
-Lastly, we need to include latent variables to capture unseen processes and to reduce the dimensionality of the data which will provide significant speed-ups.
-
-**Better Data-Driven Models**.
-Most of the current literature involving extremes utilize very simple linear models which are not sufficient to capture the complexity of the system.
-We need more expressive models that capture multiscale, nonlinear relationships. 
-They also need to capture the multivariate tendencies.
-Lastly, they need to be fast and scalable otherwise it would not be trustworthy in practice.
-We see that some of the SOTA weather forecasting almost exclusively use some sort of AI algorithm under the hood.
-
-**Better Uncertainty Quantification**.
-We need to be more *pragmatically* Bayesian, meaning be Bayesian for as long as possible until it because too computationally intensive.
-We need to incorporate more parameter and process uncertainties.
-We also need better predictive uncertainty.
-In addition, we need better model uncertainty for physics-based models, e.g., initial conditions, boundary conditions or equations of motions.
-We also need better uncertainty for data-driven models, i.e., model parameters.
 
 ***
 ## Formulation
@@ -275,7 +254,30 @@ This is similar to other "bounded tailed" distributions like the Beta-type distr
 
 ### Counting Exceedences (**TODO**)
 
+We can use a counting process to model extremes: we count the excesses, i.e., the extreme values, $y$, that fall above/below a threshold, $\epsilon$.
+
+
 #### Poisson Process (**TODO**)
+
+This would be modelled as a sum of random binary events where the variable $N_n$ counds the number of variables about the threshold, $\epsilon_n$ which has a mean $n$ of $Pr(Y > \epsilon_n)$.
+Poisson's theorem shows us that if $\epsilon_n$ st
+$$
+\lim_{n\rightarrow\infty} n Pr(Y > \epsilon_n) = \lambda \in (0, \infty)
+$$
+then $N_n$ follows approximately a **Poisson variable** $N$.
+This is analogous to counting maximum/minimum values, i.e.,
+$$
+Pr(M_n \leq \epsilon_n) = Pr(N_n=0)
+$$
+where $M_n = \text{max}(Y_1, Y_2, \ldots, Y_n)$.
+Poisson's work shows
+$$
+\begin{aligned}
+\lim_{n\rightarrow\infty}Pr(M_n\leq\epsilon_n) &= \lim_{n\rightarrow\infty}Pr(N_n=0)\\
+&= Pr(N=0) \\
+&=\exp(-\lambda)
+\end{aligned}
+$$
 
 $$
 p\{N>0\} = 1 - \exp(-n\lambda)
