@@ -15,3 +15,4 @@
 *.xml
 \.idea/
 \_build/
+*.grib*
