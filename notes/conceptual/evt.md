@@ -74,6 +74,15 @@ To estimate the 100-year storm, we would only focus on hurricanes.
 ***
 ## Formulation
 
+**Three Interpretations**
+
+> There are three interpretations of extreme value theory which are complementary. In a nutshell, there are three ways of selecting extreme values from data and then defining a likelihood function.
+
+
+- Max Values —> GEVD
+- Threshold + Max Values —> GPD
+- Threshold + Max Values + Counts + Summary Statistic —> PP
+
 **Extreme value distributions** (EVD) are the limiting distributions for the maximum/minimum of large collections of independent random variables from the same arbitrary distribution.
 
 There are many instances of ways to measure extreme values.
@@ -319,6 +328,15 @@ $$
 
 and it has a non-degenerate marginal distribution $\forall \mathbf{x}\in\mathcal{X}$, then this defines an extreme-value process.
 
+
+***
+
+**Problems**
+- Spatiotemporal Dependencies - representation
+- Measurements - very little, rare/extremely rare # of observations and complex
+- Modeling - difficult with little measurements, even with simulations, things are complex and heavy, lose interpretability
+- Experiment - what’s counterfactual?
+- Causality - event attribution and direction
 
 ***
 

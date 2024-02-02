@@ -37,7 +37,7 @@ keywords: simulations
 > We examine the basics for extracting extreme values including the block maxima and the peak of thresholds.
 > We will look at the basics for modeling extreme values including using custom distributions, e.g., GEVD, GPD, and Poisson processes.
 > We will use some of the standard and SOTA Bayesian inference methods using modern PPLs.
-> See [Basis](./god/basics) for more information.
+> See [Basis](god/basics/basics.md) for more information.
 
 $$
 \begin{aligned}

@@ -25,6 +25,42 @@ keywords: simulations
 > Some examples include removing trends like the climatology, appropriate time scale aggregation, appropriate spatial scale aggregation, filtering and differencing.
 
 ***
+
+## **Table of Contents**
+
+- *Deep Dive*: Extreme Value Theory
+- Calculating Extreme Values for Spatiotemporal Data
+- Feature Extraction for Spatiotemporal Dependencies
+- Bayesian Modeling of Extreme Values
+- Bayesian Hierarchical Modeling of Extreme Values
+- Analysis of Extreme Values
+
+***
+
+## Abstractions
+
+**Data-Driven Modeling Pipeline**
+
+1. Data Acquisition
+2. Feature Extraction
+3. Extreme Values Extraction
+4. Bayesian Model
+5. Bayesian Inference
+6. Analysis
+
+
+***
+
+**Extreme Value Extractor Pipeline**
+
+1. Define spatiotemporal block
+2. Select a threshold
+3. Select Minimum/Maximum Values
+4. Count the number occurrences of the values above a threshold within a spatiotemporal block
+5. Summary statistic of occurrences, eg mean, median, etc
+
+
+***
 ## Proposal
 
 **What's Been Done**.
@@ -139,33 +175,7 @@ where $Z$ is a normalization constant.
 We can use any inference technique including approximate inference methods or sampling methods.
 
 
-## Example PsuedoCode
 
-First, we need some spatiotemporal data.
-This data could be any spatiotemporal field, $y=y(\mathbf{s},t)$, representing the extreme values we wish to extract.
-
-```python
-y: Array["Dt Dy"] = ...
-```
-
-Now, we need to do some preprocessing steps to ensure that we get an iid dataset.
-We will remove some of the excess effects.
-
-```python
-# filter high frequency signals
-y: Array["Dt Dy"] = low_pass_filter(y, params)
-# remove climatology
-climatology["Dclim"] = calculate_climatology(y, reference_period, params)
-y: Array["Dt Dy"] = remove_climatology(y, climatology, params)
-# spatial aggregation
-y: Array["Dt"] = spatial_aggregator(y, params)
-```
-
-Now, we need to select some extreme values.
-
-```python
-y_max: Array["Dt"] = block_maximum(y, params)
-```
 
 ***
 

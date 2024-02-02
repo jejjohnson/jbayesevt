@@ -8,19 +8,74 @@ chapters:
       - file: notes/project.md
   - title: Conceptual
     sections:
-      - file: notes/conceptual/evt
+      
       - file: notes/conceptual/evp
       - file: notes/conceptual/eva
-      - file: notes/conceptual/eve
+      
   - title: Game of Dependencies
     sections:
       - file: notes/god/god
-      - file: notes/god/basics
-      - file: notes/god/covariates
-      - file: notes/god/spatiotemporal
-      - file: notes/god/dynamics
-      - file: notes/god/latent
-      - file: notes/god/transfer
+      - title: Basics
+        sections:
+          - file: notes/god/basics/basics
+          # Extreme Value Theory
+          - file: notes/conceptual/evt
+          # Calculate Extreme Values for Spatiotemporal Data
+          - file: notes/god/basics/features_extremes
+          - file: notes/god/basics/extract_extremes
+          # Feature Extraction for Spatiotemporal Dependencies
+          # Bayesian Modeling of Extreme Values
+          # Bayesian Hierarchical Modeling of Extreme Values
+          # Analysis of Extreme Values
+          - file: notes/conceptual/eve
+      - title: Covariate Effects
+        sections:
+          - file: notes/god/covariates/covariates
+          # Covariate Effects w/ Bayesian Hierarchical Modeling
+          # Analysis of spatiotemporal dependencies
+          # Temporal Coordinates
+          # Spatial Coordinates
+          # Spatiotemporal Coordinates
+      - title: Spatial Effects
+        sections:
+          - file: notes/god/spatial/spatiotemporal
+          # Introduction to GPs
+          # GPs 4 Spatial Effects of EVT
+          # Marked Poisson Process
+          # Introduction to Log Cox Gaussian Process
+          # LCGPs 4 Spatial Effects of EVT
+          # Introduction to Sparse Gaussian Processes
+          # SGPs 4 Spatial Effects of EVT
+          # SLCGP 4 Spatial Effects of Extreme Values
+      - title: Dynamical Effects
+        sections:
+          - file: notes/god/dynamical/dynamics
+          # Linear State Space Models
+          # Appendix: A Whirlwind Tour of Bayesian Filtering
+          # SSM 4 Extreme Values Modeling
+          # Markovian Gaussian Processes 4 Spatial Effects
+          # Parameter Sharing via Convolutions
+          # NN Spatial Operators
+          # Missing Data Observation Operators
+          # Nonlinear Spatial Operators
+      - title: Latent Effects
+        sections:
+          - file: notes/god/latent/latent
+          # Latent Variable Modeling via Flows
+          # Masked AutoEncoder 
+          # Markov Flows for Conjugate Latent Spaces
+          # Deep Markov Models
+      - title: Dynamical Emulators
+        sections:
+          - file: notes/god/emulator/transfer
+          # X-Circulation Models
+          # Spatiotemporal Operators Revisited - UDE Perspective
+          # Temporal Operators & ODEs 
+          # Spatial Operators & PDEs
+          # Dynamic Mode Decomposition
+          # Whirlwind Tour: Modern AI Forecasters
+          # Retraining on Climate Data
+          # Bayesian Filtering Revisited
   - title: Data
     sections:
       - file: notes/data/datasets
@@ -32,12 +87,15 @@ chapters:
       - file: notes/modeling/features_manual
       - file: notes/modeling/features_ai
       - file: notes/modeling/ai_forecast
-      - file: notes/modeling/software
   - title: Cookbook
     sections:
       - file: notes/cookbook/filtering
       - file: notes/cookbook/anomalies
       - file: notes/cookbook/spatial_mean
+  - title: Software
+    sections:
+      - file: notes/software/software
+      - file: notes/software/ppl
   - title: Appendix
     sections:
       - file: notes/appendix/notation
