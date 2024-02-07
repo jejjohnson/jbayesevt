@@ -165,21 +165,21 @@ Picture of FourCastNet. [[Source](https://www.forbes.com/sites/karlfreund/2022/0
 
 They use a subset of the 26/73 variables used within the ERA5 Dataset.
 
-| Variable | Description | ECMWF ID |
-|:---------|:------------|:--------:|
-| 10u | 10 m zonal wind | 165|
-| 10v | 10 m meridional wind | 166 |
-| 2T | 2 m temperature | 167
-| sp | surface pression | 135 |
-| msl | mean sea level pressure | 151 |
-| tcwv | total column vertically-integrated water vapour | 137 |
-| 100u | 100 m zonal wind | 228,248 |
-| 100v | 100 m meridional wind component | 228,247 |
-| z--- | geoponential (at pressure level ---) | 129 |
-| T--- | temperature (at pressure level ---) | 130 |
-| U--- | zonal wind (at pressure level ---) | 131 |
-| V--- | meridional wind (at pressure level ---) | 132 |
-| R--- | relative humidity (at pressure level ---) | 157 |
+| Variable | Description | ECMWF ID | CMIP6 |
+|:---------|:------------|:--------:|:------:|
+| 10u | 10 m zonal wind | 165| uas |
+| 10v | 10 m meridional wind | 166 | vas |
+| 2T | 2 m temperature | 167 | tas |
+| sp | surface pression | 135 | ps |
+| msl | mean sea level pressure | 151 | psl |
+| tcwv | total column vertically-integrated water vapour | 137 | prw |
+| 100u | 100 m zonal wind | 228,248 | ua100m |
+| 100v | 100 m meridional wind component | 228,247 | va100m |
+| z--- | geoponential (at pressure level ---) | 129 | zg |
+| T--- | temperature (at pressure level ---) | 130 | ta |
+| U--- | zonal wind (at pressure level ---) | 131 | ua |
+| V--- | meridional wind (at pressure level ---) | 132 | va |
+| R--- | relative humidity (at pressure level ---) | 157 | hur |
 
 Pressure Levels: `50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 850, 925, 1000` hPa
 
