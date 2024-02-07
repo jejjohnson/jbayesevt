@@ -121,6 +121,15 @@ A picture of the GraphCast model
 
 Pressure Levels: `1,2,3,5,7,10,20,30,50,70,100,125,150,175,200,225,250,300,350,400,450,500,550,600,650,700,750,775,800,825,850,875,900,925,950,975,100` hPa
 
+For a more pragmatic view of the variables, we have:
+
+* Grid: `0.25 x 0.25`
+* Area: `-90:90`, `0:359.75`
+* Pressure Levels: `50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 850, 925, 1000`
+* Parameters @ Pressure Levels: `t, z, u, v, z, w, q`
+* Parameters @ Single Levels: `lsm, 2t, msl, 10u, 10v, tp, z`
+
+
 :::
 
 
@@ -174,6 +183,14 @@ They use a subset of the 26/73 variables used within the ERA5 Dataset.
 
 Pressure Levels: `50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 850, 925, 1000` hPa
 
+For a more pragmatic view of the variables, we have:
+
+* Grid: `0.25 x 0.25`
+* Area: `-90:90`, `0:359.75`
+* Pressure Levels: `1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50`
+* Parameters @ Pressure Levels: `t, u, v, z, r`
+* Parameters @ Single Levels: `10u, 10v, 2t, sp, msl, tcwv, 100u, 100v`
+
 :::
 
 
@@ -193,6 +210,21 @@ They use the Transformer architecture.
 
 Figure of the Pangu-Framework
 ```
+
+
+:::{note} Variables
+:class: dropdown
+
+For a more pragmatic view of the variables, we have:
+
+* Grid: `0.25 x 0.25`
+* Area: `-90:90`, `0:359.75`
+* Pressure Levels: `1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50`
+* Parameters @ Pressure Levels: `z, q, t, u, v`
+* Parameters @ Single Levels: `msl, 10u, 10v, 2t`
+
+
+:::
 
 ***
 

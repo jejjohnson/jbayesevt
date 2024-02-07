@@ -27,21 +27,57 @@ keywords: simulations
 
 
 
-**Build a Model**
+#### Model
+
+The first step, we need to build a model
+
+$$
+p(\mathcal{D},\boldsymbol{\theta})=p(y|x,\boldsymbol{\theta})p(\boldsymbol{\theta})
+$$
+
+In this joint distribution, we have a likelihood and a prior.
+The likelihood is given by a Gaussian
+
+$$
+p(y|x,\boldsymbol{\theta})=\mathcal{N}(y|wx+b,\sigma^2)
+$$
+
+We also have the parameters given by
+
+$$
+\boldsymbol{\theta} = \{w,b,\sigma\}
+$$
+
+so we need prior distributions on these as well.
 
 ```python
-def model(u: Array, y: Optional[Array]=None):
+def model(x: Array, y: Optional[Array]=None):
     # sample parameters
     bias = numpyro.sample("b", dist.Normal(0.0, 0.2))
     weight = numpyro.sample("w", dist.Normal(0.0, 0.5))
     sigma = numpyro.sample("sigma", dist.Exponential(1.0))
     # calculate formula
-    mu = weight * u + bias
+    mu = weight * x + bias
     # data likelihood
     numpyro.sample("obs", dist.normal(mu, sigma), obs=y)
 ```
 
 **Prior Predictive Distribution**
+
+$$
+p(y^*)=\int p(y^*,\boldsymbol{\theta})d\boldsymbol{\theta}=
+\int p(y^*|\boldsymbol{\theta})p(\boldsymbol{\theta})d\boldsymbol{\theta}
+$$
+
+So from a more practical perspective, this works by
+
+$$
+\begin{aligned}
+p(y^*) &\approx \frac{1}{N}\sum_{n=1}^Np(y_n|\boldsymbol{\theta}_n) && &&
+\boldsymbol{\theta}_n \sim p(\boldsymbol{\theta}) && &&
+n = 1,2,\ldots,N
+\end{aligned}
+$$
 
 ```python
 prior_predictive = Predictive(model, num_sample=100)
