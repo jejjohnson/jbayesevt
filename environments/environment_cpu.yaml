@@ -1,0 +1,40 @@
+name: bayesevt
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - conda-forge::jupytext
+  - conda-forge::jupyter-book
+  - conda-forge::myst-parser
+  - conda-forge::pre-commit
+  - conda-forge::"nodejs>=20,<21"
+  - conda-forge::mystmd
+  - xarray
+  - cartopy
+  - cmocean
+  - seaborn
+  - matplotlib
+  - xmovie
+  - ipykernel
+  - ffmpeg
+  - pip
+  - pip:
+      - cookiecutter
+      - autoroot
+      # DATA ACCESS
+      - climetlab
+      - xee
+      - ecmwf-api-client
+      - cds
+      # VISUALIZATION
+      - lexcube
+      - tqdm
+      # ECMWF MODELS
+      - ai-models
+      # - ai-models-panguweather
+      - ai-models-graphcast
+      - ai-models-fourcastnet
+      - ai-models-fourcastnetv2
+      - git+https://github.com/deepmind/graphcast.git
+    #   - sphinx-proof

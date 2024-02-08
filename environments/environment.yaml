@@ -1,0 +1,26 @@
+name: bayesevt
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - xarray
+  - cartopy
+  - cmocean
+  - seaborn
+  - matplotlib
+  - xmovie
+  - ipykernel
+  - ffmpeg
+  - pip
+  - pip:
+      - cookiecutter
+      - autoroot
+      # DATA ACCESS
+      - climetlab
+      - xee
+      - ecmwf-api-client
+      - cds
+      # VISUALIZATION
+      - lexcube
+      - tqdm
