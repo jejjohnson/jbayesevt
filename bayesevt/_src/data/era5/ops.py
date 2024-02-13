@@ -1,4 +1,6 @@
-from typing import List, Union
+from typing import List, Union, Dict
+from functools import partial
+from bayesevt._src.dtypes.time import Time
 from bayesevt._src.data.era5.variables import SINGLE_LEVEL_TO_ERA5_CODE, SingleLevelCode, PressureLevelCode
 
 
@@ -81,3 +83,31 @@ def parse_all_variables(channel_names: list[str]) -> List[Union[SingleLevelCode,
     assert len(all_vars) == len(channel_names)
     return all_vars
 
+
+# def joint_requests_pl(codes: List[PressureLevelCode], time: Time, format: str="grib") -> Dict:
+    
+#     f = partial(create_request_pressure_level, time=time, format=format)
+
+#     requests = list(map(f, codes))
+
+#     datasets, list_of_requests, savenames = zip(*requests)
+    
+#     return None
+
+
+def joint_requests(list_of_requests: List[Dict]) -> Dict:
+
+    joint_requests = {}
+    for irequest in list_of_requests:
+        for (ikey, ivalue) in irequest.items():
+            # create a new key entry (assume the same)
+            # TODO CHECK!
+            if ikey not in joint_requests:
+                joint_requests[ikey] = ivalue
+            # concatenated the unique list elements
+            if ikey in ["year", "time", "day", "month", "pressure_level", "param"]:
+                joint_requests[ikey] = list(set(joint_requests[ikey] + ivalue))
+                
+    joint_requests["param"] = '/'.join([str(x) for x in joint_requests["param"]])
+    
+    return joint_requests

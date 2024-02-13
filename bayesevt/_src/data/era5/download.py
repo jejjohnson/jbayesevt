@@ -1,8 +1,10 @@
 from typing import Tuple, Dict, List
+from functools import partial
 from bayesevt._src.dtypes.grid import Grid, RES025
 from bayesevt._src.dtypes.region import Region, GLOBE
 from bayesevt._src.dtypes.time import Time
 from bayesevt._src.data.era5.variables import SingleLevelCode, PressureLevelCode
+from bayesevt._src.data.era5.ops import joint_requests
 
 ERA5_PARAM_CODES_SURFACE_FOURCASTNET = [
     165, # 10u, 10m u component of wind
@@ -40,6 +42,11 @@ ERA5_LEVELS_FOURCASTNET = [
     50 
 ]
 
+SAVE_FORMAT = {
+    "grib": ".grib",
+    "netcdf": ".nc"
+}
+
 
 def create_request_single_level(
     code: SingleLevelCode, 
@@ -56,19 +63,23 @@ def create_request_single_level(
     # create request
     request = dict(
         product_type=product,
-        date=time.date,
-        param=str(code.id),
-        time=time.time,
+        year=[str(time.year)],
+        month=[str(time.month)],
+        day=[str(time.day)],
+        param=[str(code.id)],
+        time=[str(time.time)],
         area=region.bbox_cdsapi,
         grid=grid.bbox_cdsapi,
         format=format
         
     )
-    return dataset, request
+    save_format = SAVE_FORMAT[format]
+    save_name = f"{product}-{code.name}-{time.year}{time.month}{time.day}-{time.time}-sl{save_format}"
+    return dataset, request, save_name
 
 
-def create_request_pressure_level(
-    codes: List[PressureLevelCode], 
+def create_request_single_level_multi(
+    codes: List[SingleLevelCode],
     time: Time,
     region: Region = GLOBE,
     grid: Grid = RES025,
@@ -76,28 +87,77 @@ def create_request_pressure_level(
     
 ) -> Tuple[str, Dict]:
     # checks
-    _check_consistent_ids(codes)
+    # _check_consistent_ids(codes)
+    f = partial(create_request_single_level, time=time, format=format, region=region, grid=grid)
+    list_of_requests = list(map(f, codes))
+    datasets, list_of_requests, _ = zip(*list_of_requests)
+    product = codes[0].product
+
+    request = joint_requests(list_of_requests)
+
+    save_format = SAVE_FORMAT[format]
+    save_name = f"{product}-{time.year}{time.month}{time.day}-{time.time}-sl{save_format}"
+    return datasets[0], request, save_name
+
+
+def create_request_pressure_level(
+    code: PressureLevelCode,
+    time: Time,
+    region: Region = GLOBE,
+    grid: Grid = RES025,
+    format: str="netcdf"
+    
+) -> Tuple[str, Dict]:
+    # # checks
+    # _check_consistent_ids(codes)
     
     # extract code specifics
-    dataset = codes[0].dataset
-    product = codes[0].product
-    param = str(codes[0].id)
+    dataset = code.dataset
+    product = code.product
+    param = str(code.id)
+    pressure_level = code.level
     # extract levels
-    pressure_level = sorted(list(map(lambda x: x.level, codes)))
+    # pressure_level = sorted(list(map(lambda x: x.level, codes)))
 
     # create request
     request = dict(
         product_type=product,
-        date=time.date,
-        param=param,
-        pressure_level=pressure_level,
-        time=time.time,
+        year=[str(time.year)],
+        month=[str(time.month)],
+        day=[str(time.day)],
+        param=[str(param)],
+        pressure_level=[int(pressure_level)],
+        time=[str(time.time)],
         area=region.bbox_cdsapi,
         grid=grid.bbox_cdsapi,
         format=format
         
     )
-    return dataset, request
+    save_format = SAVE_FORMAT[format]
+    save_name = f"{product}-{code.name}{pressure_level}-{time.year}{time.month}{time.day}-{time.time}-pl{save_format}"
+    return dataset, request, save_name
+
+
+def create_request_pressure_level_multi(
+    codes: List[PressureLevelCode],
+    time: Time,
+    region: Region = GLOBE,
+    grid: Grid = RES025,
+    format: str="netcdf"
+    
+) -> Tuple[str, Dict]:
+    # checks
+    # _check_consistent_ids(codes)
+    f = partial(create_request_pressure_level, time=time, format=format, region=region, grid=grid)
+    list_of_requests = list(map(f, codes))
+    datasets, list_of_requests, _ = zip(*list_of_requests)
+    product = codes[0].product
+
+    request = joint_requests(list_of_requests)
+
+    save_format = SAVE_FORMAT[format]
+    save_name = f"{product}-{time.year}{time.month}{time.day}-{time.time}-pl{save_format}"
+    return datasets[0], request, save_name
 
 def _check_consistent_ids(pl_codes: list) -> None:
     ids = set(list(map(lambda x: x.id, pl_codes)))
