@@ -81,6 +81,7 @@ def parse_all_variables(channel_names: list[str]) -> List[Union[SingleLevelCode,
     all_vars = parse_single_levels(channel_names)
     all_vars += parse_pressure_levels(channel_names)
     assert len(all_vars) == len(channel_names)
+
     return all_vars
 
 
