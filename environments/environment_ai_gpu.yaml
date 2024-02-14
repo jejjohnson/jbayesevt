@@ -10,6 +10,8 @@ dependencies:
   # - conda-forge::pre-commit
   # - conda-forge::"nodejs>=20,<21"
   # - conda-forge::mystmd
+  - conda-forge::iris
+  - conda-forge::iris-grib
   - cudatoolkit
   - xarray
   - cartopy
@@ -27,15 +29,17 @@ dependencies:
       - climetlab
       - xee
       - ecmwf-api-client
-      - cds
+      - cdsapi
       # VISUALIZATION
-      - lexcube
+      # - lexcube
       - tqdm
       # ECMWF MODELS
       - ai-models
-      - ai-models-panguweather
-      - ai-models-graphcast
-      - ai-models-fourcastnet
+      # - ai-models-panguweather
+      # - ai-models-graphcast
+      # - ai-models-fourcastnet
       - ai-models-fourcastnetv2
-      - git+https://github.com/deepmind/graphcast.git
+      - git+https://github.com/NVIDIA/earth2mip.git
+      # - git+https://github.com/deepmind/graphcast.git
     #   - sphinx-proof
+      - loguru 

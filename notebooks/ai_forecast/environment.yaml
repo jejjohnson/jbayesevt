@@ -4,6 +4,8 @@ channels:
 dependencies:
   - python=3.10
   - cudatoolkit
+  - conda-forge::iris
+  - conda-forge::iris-grib
   - xarray
   - cartopy
   - cmocean
