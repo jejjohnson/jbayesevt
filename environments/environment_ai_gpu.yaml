@@ -12,8 +12,12 @@ dependencies:
   # - conda-forge::mystmd
   - conda-forge::iris
   - conda-forge::iris-grib
+  # DATASETS
+  - conda-forge::xmip
+  - conda-forge::cf_xarray
+  - conda-forge::intake-esm
   - cudatoolkit
-  - xarray
+  - conda-forge::xarray
   - cartopy
   - cmocean
   - seaborn
