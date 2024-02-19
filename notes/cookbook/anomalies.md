@@ -12,42 +12,14 @@ authors:
     email: juanjohn@ucm.es
 license: CC-BY-4.0
 keywords: simulations
-abbreviations:
-    ERA5: ECMWF Reanalysis Version 5
-    CMIP6: Coupled Model Intercomparison Project Phase 6
-    AMIP6: Atmospherical Model Intercomparison Project Phase 6
-    PDEs: Partial Differential Equations
-    RHS: Right Hand Side
-    TLDR: Too Long Did Not Read
-    SSP: Shared Socioeconomic Pathways
-    GPD: Generalized Pareto Distribution
-    GEV: Generalized Extreme Value
 ---
 
 
-## Climatology
 
-$$
-\begin{aligned}
-\text{Climatology Equation}: && && \bar{y}_c(t) &= \frac{1}{N_s}\sum_{n=1}^{Ns}\boldsymbol{y}(\mathbf{x}_n,t) \\
-\text{Climatology Function}: && && \bar{y}_c&: \Omega_\text{Globe}\times\mathcal{T}_\text{Reference} \rightarrow \mathbb{R}^{D_y} \\
-\text{Spatial Domain}: && && \mathbf{x}&\in\Omega_\text{Globe}\subseteq\mathbb{R}^{D_s}\\
-\text{Temporal Domain}: && && t&\in\mathcal{T}_\text{Reference}\subseteq\mathbb{R}^+
-\end{aligned}
-$$
-
-:::{seealso} Tutorials
-:class: dropdown
-
-[**ClimateMatch**](https://comptools.climatematch.io/tutorials/W1D1_ClimateSystemOverview/student/W1D1_Tutorial5.html).
-An simple tutorial showcasing how the `groupby` function works wrt monthly/seasonal means.
-
-[**Xarray**](https://docs.xarray.dev/en/stable/examples/monthly-means.html).
-A tutorial that showcases how to calculate seasonal averages from time series of monthly means.
-
-:::
 
 ## Anomalies
+
+**Definition**: the anomaly of a variable is the variation in the signal relative to the climatological signal.
 
 
 There is an error in this formulation because you cannot subtract the climatology from the global time series because they are on different temporal domains.

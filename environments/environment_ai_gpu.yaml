@@ -12,6 +12,7 @@ dependencies:
   # - conda-forge::mystmd
   - conda-forge::iris
   - conda-forge::iris-grib
+  - conda-forge::regionmask
   # DATASETS
   - conda-forge::xmip
   - conda-forge::cf_xarray
