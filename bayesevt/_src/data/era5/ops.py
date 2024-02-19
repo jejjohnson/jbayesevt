@@ -97,7 +97,16 @@ def parse_all_variables(channel_names: list[str]) -> List[Union[SingleLevelCode,
 
 
 def joint_requests(list_of_requests: List[Dict]) -> Dict:
+    """
+    Combines multiple requests into a single joint request.
 
+    Args:
+        list_of_requests (List[Dict]): A list of dictionaries representing individual requests.
+
+    Returns:
+        Dict: A dictionary representing the joint request.
+
+    """
     joint_requests = {}
     for irequest in list_of_requests:
         for (ikey, ivalue) in irequest.items():
