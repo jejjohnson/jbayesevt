@@ -50,6 +50,16 @@ ERA5_CODE_TO_NAME = {
 
 @dataclass(eq=True, order=True, frozen=True)
 class PressureLevelCode:
+    """
+    Represents a pressure level code used in ERA5 data.
+
+    Attributes:
+        id (int): The identifier of the pressure level code.
+        level (int): The level of the pressure level code.
+        name (str): The name of the pressure level code.
+        var_name (str): The variable name associated with the pressure level code.
+    """
+
     id: int
     level: int = 0
     name: str = ""
@@ -57,48 +67,119 @@ class PressureLevelCode:
 
     @classmethod
     def from_name(cls, name: str):
+        """
+        Creates a PressureLevelCode instance from a given name.
+
+        Args:
+            name (str): The name of the pressure level.
+
+        Returns:
+            PressureLevelCode: The PressureLevelCode instance.
+        """
         var_name, level = _parse_pressure_level_name(name)
         id_ = SINGLE_LEVEL_TO_ERA5_CODE[var_name]
         return PressureLevelCode(id=id_, level=level, name=var_name, var_name=name)
     
     @classmethod
     def from_id_and_level(cls, id: int, level: int=0):
+        """
+        Creates a PressureLevelCode instance from a given id and level.
+
+        Args:
+            id (int): The identifier of the pressure level.
+            level (int, optional): The level of the pressure level. Defaults to 0.
+
+        Returns:
+            PressureLevelCode: The PressureLevelCode instance.
+        """
         name = ERA5_CODE_TO_NAME[id]
         var_name = f"{name}{level}"
         return PressureLevelCode(id=id, level=level, name=name, var_name=var_name)
 
     @property
     def dataset(self):
+        """
+        Returns the dataset associated with the pressure level code.
+
+        Returns:
+            str: The dataset name.
+        """
         return "reanalysis-era5-pressure-levels"
     
     @property
     def product(self):
+        """
+        Returns the product associated with the pressure level code.
+
+        Returns:
+            str: The product name.
+        """
         return "reanalysis"
 
 @dataclass(eq=True, order=True, frozen=True)
 class SingleLevelCode:
+    """
+    Represents a single level code for ERA5 variables.
+    """
+
     id: int
     name: str = ""
 
     @classmethod
     def from_name(cls, name: str):
+        """
+        Creates a SingleLevelCode instance from the given name.
+
+        Args:
+            name (str): The name of the variable.
+
+        Returns:
+            SingleLevelCode: The SingleLevelCode instance.
+        """
         return SingleLevelCode(id=SINGLE_LEVEL_TO_ERA5_CODE[name], name=name)
     
     @classmethod
     def from_id(cls, id: str):
+        """
+        Creates a SingleLevelCode instance from the given ID.
+
+        Args:
+            id (str): The ID of the variable.
+
+        Returns:
+            SingleLevelCode: The SingleLevelCode instance.
+        """
         name = ERA5_CODE_TO_NAME[id]
         return SingleLevelCode(id=id, name=name)
     
     @property
     def var_name(self):
+        """
+        Gets the name of the variable.
+
+        Returns:
+            str: The name of the variable.
+        """
         return self.name
     
     @property
     def dataset(self):
+        """
+        Gets the dataset name.
+
+        Returns:
+            str: The dataset name.
+        """
         return "reanalysis-era5-single-levels"
     
     @property
     def product(self):
+        """
+        Gets the product name.
+
+        Returns:
+            str: The product name.
+        """
         return "reanalysis"
 
 
