@@ -3,8 +3,6 @@ from typing import Union, Tuple
 
 # codes database: https://codes.ecmwf.int/grib/param-db/?filter=grib2
 
-# codes database: https://codes.ecmwf.int/grib/param-db/?filter=grib2
-
 @dataclass(eq=True, order=True, frozen=True)
 class VariableSingleLevel:
 
