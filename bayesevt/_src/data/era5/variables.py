@@ -63,9 +63,9 @@ class Temperature2m(VariableSingleLevel):
     short_name: str = "t2m"
     long_name: str = "2m Temperature"
     era5_name: str = "2m_temperature"
-    ecmwf_gid: int = 228247
+    ecmwf_gid: int = 167
     cmip_name: str = ""
-    units: str = "meters / second"
+    units: str = "K"
 
 
 @dataclass(eq=True, order=True, frozen=True)
@@ -194,6 +194,8 @@ class WindV(VariablePressureLevel):
     units: str = "meters / second"
 
 
+
+
 @dataclass(eq=True, order=True, frozen=True)
 class Temperature(VariablePressureLevel):
     short_name: str = "t"
@@ -251,10 +253,11 @@ SINGLE_LEVEL_NAMES = {
     "t": Temperature, # t,  temperature
     "q": SpecificHumidty,
     "r": RelativeHumidty, # relative humidity
-    "t2m": Temperature2m,
+    
     ###############
     # SURFACE
     ###############
+    "t2m": Temperature2m,
     "u10m": UWind10m, # 10u, 10m u component of wind
     "v10m": VWind10m, # 10v, 10m v component of wind
     "u100m": UWind100m, # 100u, 100m u component of wind

@@ -1,4 +1,4 @@
-VARIABLES = {
+EARTH2MIP_MODEL_VARIABLES = {
     "fcnv2_sm": [
         'u10m',
         'v10m',

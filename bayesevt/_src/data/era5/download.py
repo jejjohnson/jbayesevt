@@ -123,7 +123,8 @@ def create_request_single_level_multi(
     request = joint_requests(list_of_requests)
 
     save_format = SAVE_FORMAT[save_format]
-    save_name = f"{product}-{time.year}{time.month}{time.day}-{time.time}-sl{save_format}"
+    save_name = f"{product}-{time.year}{time.month}{time.day}{time.time.replace(':', '')}-sl{save_format}"
+
     return datasets[0], request, save_name
 
 
@@ -175,7 +176,7 @@ def create_request_pressure_level(
         
     )
     save_format = SAVE_FORMAT[save_format]
-    save_name = f"{product}-{code.name}{pressure_level}-{time.year}{time.month}{time.day}-{time.time}-pl{save_format}"
+    save_name = f"{product}-{code.name}{pressure_level}-{time.year}{time.month}{time.day}{time.time.replace(':', '')}-pl{save_format}"
     return dataset, request, save_name
 
 
@@ -210,7 +211,7 @@ def create_request_pressure_level_multi(
 
     request = joint_requests(list_of_requests)
     save_format = SAVE_FORMAT[save_format]
-    save_name = f"{product}-{time.year}{time.month}{time.day}-{time.time}-pl{save_format}"
+    save_name = f"{product}-{time.year}{time.month}{time.day}{time.time.replace(':', '')}-pl{save_format}"
     return datasets[0], request, save_name
 
 def _check_consistent_ids(pl_codes: list) -> None:
