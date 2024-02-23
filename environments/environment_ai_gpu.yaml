@@ -30,6 +30,7 @@ dependencies:
       - xee
       - ecmwf-api-client
       - cdsapi
+      - gcsfs
       # VISUALIZATION
       # - lexcube
       - tqdm
@@ -40,7 +41,7 @@ dependencies:
       # - ai-models-fourcastnet
       - ai-models-fourcastnetv2
       - git+https://github.com/NVIDIA/earth2mip.git
-      - git+https://github.com/NVIDIA/apex.git -v --disable-pip-version-check --no-cache-dir --no-build-isolation --global-option="--cpp_ext" --global-option="--cuda_ext"
+      - onnxruntime-gpu
       # - git+https://github.com/deepmind/graphcast.git
     #   - sphinx-proof
       - loguru 

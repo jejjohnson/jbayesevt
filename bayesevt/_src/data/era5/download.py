@@ -4,7 +4,7 @@ import cdsapi
 from bayesevt._src.dtypes.grid import Grid, RES025
 from bayesevt._src.dtypes.region import Region, GLOBE
 from bayesevt._src.dtypes.time import Time
-from bayesevt._src.data.era5.variables import SingleLevelCode, PressureLevelCode
+from bayesevt._src.data.era5.variables import VariablePressureLevel, VariableSingleLevel
 from bayesevt._src.data.era5.ops import joint_requests
 
 ERA5_PARAM_CODES_SURFACE_FOURCASTNET = [
@@ -50,7 +50,7 @@ SAVE_FORMAT = {
 
 
 def create_request_single_level(
-    code: SingleLevelCode, 
+    code: VariableSingleLevel, 
     time: Time,
     region: Region = GLOBE,
     grid: Grid = RES025,
@@ -79,7 +79,7 @@ def create_request_single_level(
         year=[str(time.year)],
         month=[str(time.month)],
         day=[str(time.day)],
-        param=[str(code.id)],
+        param=[str(code.ecmwf_gid)],
         time=[str(time.time)],
         area=region.bbox_cdsapi,
         grid=grid.bbox_cdsapi,
@@ -94,7 +94,7 @@ def create_request_single_level(
 from typing import List, Tuple, Dict
 
 def create_request_single_level_multi(
-    codes: List[SingleLevelCode],
+    codes: List[VariableSingleLevel],
     time: Time,
     region: Region = GLOBE,
     grid: Grid = RES025,
@@ -123,12 +123,13 @@ def create_request_single_level_multi(
     request = joint_requests(list_of_requests)
 
     save_format = SAVE_FORMAT[save_format]
-    save_name = f"{product}-{time.year}{time.month}{time.day}-{time.time}-sl{save_format}"
+    save_name = f"{product}-{time.year}{time.month}{time.day}{time.time.replace(':', '')}-sl{save_format}"
+
     return datasets[0], request, save_name
 
 
 def create_request_pressure_level(
-    code: PressureLevelCode,
+    code: VariablePressureLevel,
     time: Time,
     region: Region = GLOBE,
     grid: Grid = RES025,
@@ -155,7 +156,7 @@ def create_request_pressure_level(
     # extract code specifics
     dataset = code.dataset
     product = code.product
-    param = str(code.id)
+    param = str(code.ecmwf_gid)
     pressure_level = code.level
     # extract levels
     # pressure_level = sorted(list(map(lambda x: x.level, codes)))
@@ -175,14 +176,14 @@ def create_request_pressure_level(
         
     )
     save_format = SAVE_FORMAT[save_format]
-    save_name = f"{product}-{code.name}{pressure_level}-{time.year}{time.month}{time.day}-{time.time}-pl{save_format}"
+    save_name = f"{product}-{code.name}{pressure_level}-{time.year}{time.month}{time.day}{time.time.replace(':', '')}-pl{save_format}"
     return dataset, request, save_name
 
 
 from typing import List, Tuple, Dict
 
 def create_request_pressure_level_multi(
-    codes: List[PressureLevelCode],
+    codes: List[VariablePressureLevel],
     time: Time,
     region: Region = GLOBE,
     grid: Grid = RES025,
@@ -210,7 +211,7 @@ def create_request_pressure_level_multi(
 
     request = joint_requests(list_of_requests)
     save_format = SAVE_FORMAT[save_format]
-    save_name = f"{product}-{time.year}{time.month}{time.day}-{time.time}-pl{save_format}"
+    save_name = f"{product}-{time.year}{time.month}{time.day}{time.time.replace(':', '')}-pl{save_format}"
     return datasets[0], request, save_name
 
 def _check_consistent_ids(pl_codes: list) -> None:
