@@ -25,6 +25,7 @@ dependencies:
   - pip:
       - cookiecutter
       - autoroot
+      - python-dateutil
       # DATA ACCESS
       - climetlab
       - xee

@@ -1,12 +1,21 @@
 from dataclasses import dataclass
 import datetime
+import pandas as pd
+from dateutil.parser import parse
 
 @dataclass
 class Time:
     datetime: datetime.datetime
 
-    def __init__(self, *args, **kwargs):
-        self.datetime = datetime.datetime(*args, **kwargs)
+    @classmethod
+    def from_explicit_units(cls, *args, **kwargs):
+        time = datetime.datetime(*args, **kwargs)
+        return cls(time)
+
+    @classmethod
+    def from_datetime_str(cls, time: str):
+        time = pd.Timestamp(time).to_pydatetime()
+        return Time(datetime=time)
 
     @property
     def date(self):
