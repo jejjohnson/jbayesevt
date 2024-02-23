@@ -1,38 +1,39 @@
 from typing import List, Union, Dict
 from functools import partial
 from bayesevt._src.dtypes.time import Time
-from bayesevt._src.data.era5.variables import SINGLE_LEVEL_TO_ERA5_CODE, SingleLevelCode, PressureLevelCode
+from bayesevt._src.data.era5.variables import VariablePressureLevel, VariableSingleLevel, VARIABLE_NAMES, VARIABLES_SURFACE
 
 
-def parse_single_levels(channel_names: list[str]) -> list[SingleLevelCode]:
+def parse_single_levels(channel_names: list[str]) -> list[VariableSingleLevel]:
     """
-    Parses a list of channel names and returns a list of corresponding SingleLevelCode objects.
+    Parses a list of channel names and returns a list of corresponding VariableSingleLevel objects.
 
     Args:
         channel_names (list[str]): A list of channel names.
 
     Returns:
-        list[SingleLevelCode]: A list of SingleLevelCode objects corresponding to the input channel names.
+        list[VariableSingleLevel]: A list of VariableSingleLevel objects corresponding to the input channel names.
 
     Example:
     >>> channels = ["u10m", "v10m", "z100", "u250"]
     >>> parse_single_levels(channels_)
-    [SingleLevelCode(id=165, name='u10m'), 
+    [VariableSingleLevel(id=165, name='u10m'), 
     SingleLevelCode(id=166, name='v10m')]
     """
     # check if name in explicit names
-    criteria = lambda x: x in SINGLE_LEVEL_TO_ERA5_CODE
+    criteria = lambda x: x in VARIABLES_SURFACE
+
     # filter for criteria
     sl_variables = list(filter(criteria, channel_names))
     # create single level codes
-    f = lambda x: SingleLevelCode.from_name(name=x)
+    f = lambda x: VARIABLE_NAMES[x]()
     # map list to codes
     return list(map(f, sl_variables))
 
 
-def parse_pressure_levels(channel_names: list[str]) -> list[PressureLevelCode]:
+def parse_pressure_levels(channel_names: list[str]) -> list[VariablePressureLevel]:
     """
-    Parses a list of channel names and returns a list of corresponding PressureLevelCode objects.
+    Parses a list of channel names and returns a list of corresponding VariablePressureLevel objects.
 
     Args:
         channel_names (list[str]): A list of channel names.
@@ -43,21 +44,20 @@ def parse_pressure_levels(channel_names: list[str]) -> list[PressureLevelCode]:
     Example:
     >>> channels = ["u10m", "v10m", "z100", "u250"]
     >>> parse_pressure_levels(channels_)
-    [SingleLevelCode(id=165, name='u10m'), SingleLevelCode(id=166, name='v10m')]
-    [PressureLevelCode(id=129, level=100, name='z'),
-    PressureLevelCode(id=131, level=250, name='u')]
+    [VariablePressureLevel(id=129, level=100, name='z'),
+    VariablePressureLevel(id=131, level=250, name='u')]
     """
     # check if name in explicit names
-    criteria = lambda x: x not in SINGLE_LEVEL_TO_ERA5_CODE
+    criteria = lambda x: x not in VARIABLES_SURFACE
     # filter for criteria
     pl_variables = list(filter(criteria, channel_names))
     # create pressure level codes
-    f = lambda x: PressureLevelCode.from_name(name=x)
+    f = lambda x: VARIABLE_NAMES[x[0]](level=int(x[1:]))
     # map list to codes
     return list(map(f, pl_variables))
 
 
-def parse_all_variables(channel_names: list[str]) -> List[Union[SingleLevelCode, PressureLevelCode]]:
+def parse_all_variables(channel_names: list[str]) -> List[Union[VariableSingleLevel, VariablePressureLevel]]:
     """
     Parses all variables from the given channel names.
 
@@ -78,8 +78,17 @@ def parse_all_variables(channel_names: list[str]) -> List[Union[SingleLevelCode,
     PressureLevelCode(id=129, level=100, name='z'),
     PressureLevelCode(id=131, level=250, name='u')]
     """
-    all_vars = parse_single_levels(channel_names)
-    all_vars += parse_pressure_levels(channel_names)
+    # # check if name in explicit names
+    # criteria = lambda x: x not in VARIABLES_SURFACE
+    # # filter for criteria
+    # pl_variables = list(filter(criteria, channel_names))
+    # create pressure level codes
+    f = lambda x: (
+        VARIABLE_NAMES[x[0]](level=int(x[1:])) if x not in VARIABLES_SURFACE 
+        else VARIABLE_NAMES[x]()
+    )
+    # map list to codes
+    all_vars = list(map(f, channel_names))
     assert len(all_vars) == len(channel_names)
 
     return all_vars
@@ -97,7 +106,16 @@ def parse_all_variables(channel_names: list[str]) -> List[Union[SingleLevelCode,
 
 
 def joint_requests(list_of_requests: List[Dict]) -> Dict:
+    """
+    Combines multiple requests into a single joint request.
 
+    Args:
+        list_of_requests (List[Dict]): A list of dictionaries representing individual requests.
+
+    Returns:
+        Dict: A dictionary representing the joint request.
+
+    """
     joint_requests = {}
     for irequest in list_of_requests:
         for (ikey, ivalue) in irequest.items():

@@ -1,7 +1,7 @@
 from typing import Tuple, List, Union
 import eccodes
 import numpy as np
-from bayesevt._src.data.era5.variables import PressureLevelCode, SingleLevelCode
+from bayesevt._src.data.era5.variables import VARIABLE_CODES, VariableSingleLevel, VariablePressureLevel
 import xarray as xr
 
 
@@ -22,7 +22,7 @@ def extract_grib_params(gid: int) -> Tuple[int, int, str]:
     return id_, level, level_type
 
 
-def load_grib_dataset(files: List[str], codes: List[Union[SingleLevelCode, PressureLevelCode]]) -> xr.Dataset:
+def load_grib_dataset(files: List[str], codes: List[Union[VariableSingleLevel, VariablePressureLevel]]) -> xr.Dataset:
 
     # empty arrays
     arrays = [None] * len(codes)
@@ -40,9 +40,9 @@ def load_grib_dataset(files: List[str], codes: List[Union[SingleLevelCode, Press
 
                 # Create Unique Code to Match List of Variables
                 if level_type == "surface":
-                    code = SingleLevelCode.from_id(id=id)
+                    code = VARIABLE_CODES[id]()
                 elif level_type == "isobaricInhPa":
-                    code = PressureLevelCode.from_id_and_level(id=id, level=level)
+                    code = VARIABLE_CODES[id](level=level)
 
                 # check if Unique Code Exists
                 try:

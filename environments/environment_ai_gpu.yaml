@@ -30,11 +30,13 @@ dependencies:
   - pip:
       - cookiecutter
       - autoroot
+      - python-dateutil
       # DATA ACCESS
       - climetlab
       - xee
       - ecmwf-api-client
       - cdsapi
+      - gcsfs
       # VISUALIZATION
       # - lexcube
       - tqdm
@@ -45,6 +47,7 @@ dependencies:
       # - ai-models-fourcastnet
       - ai-models-fourcastnetv2
       - git+https://github.com/NVIDIA/earth2mip.git
+      - onnxruntime-gpu
       # - git+https://github.com/deepmind/graphcast.git
     #   - sphinx-proof
       - loguru 
