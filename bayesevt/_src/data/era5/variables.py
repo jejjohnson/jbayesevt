@@ -4,6 +4,29 @@ from typing import Union, Tuple
 
 # codes database: https://codes.ecmwf.int/grib/param-db/?filter=grib2
 
+ERA5_CODE_TO_NAME = {
+    129: "z" , # z, geopotential
+    131: "u" , # u, u component of wind
+    132: "v" , # v, v component of wind
+    135: "w" , # w = dp/dt, normally called omega
+    130: "t" , # t, 2m temperature
+    133: "q" ,
+    157: "r" , # relative humidity
+    167: "t2m" ,
+    165: "u10m" , # 10u, 10m u component of wind
+    166: "v10m" , # 10v, 10m v component of wind
+    228246: "u100m" , # 100u, 100m u component of wind
+    228247: "v100m" , # 100v, 100m v component of wind
+    137: "tcwv" , # tcwv, total column vertically-integrated water vapour
+    134: "sp" , # sp, surface pressure
+    151: "msl" ,
+    228: "tp" , # total precip
+    260267: "tp06" , # total precip accumlated over 6 hours
+    212: "tisr" ,
+    162051: "zs" ,
+    172: "lsm" ,
+}
+
 @dataclass(eq=True, order=True, frozen=True)
 class VariableSingleLevel:
 
