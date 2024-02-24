@@ -10,15 +10,15 @@ dependencies:
   # - conda-forge::pre-commit
   # - conda-forge::"nodejs>=20,<21"
   # - conda-forge::mystmd
-  - conda-forge::iris
-  - conda-forge::iris-grib
   - conda-forge::regionmask
+  - conda-forge::xarray
   # DATASETS
   - conda-forge::xmip
   - conda-forge::cf_xarray
   - conda-forge::intake-esm
+  # STUFF
   - cudatoolkit
-  - conda-forge::xarray
+  # VISUALIZATION
   - cartopy
   - cmocean
   - seaborn
@@ -31,6 +31,7 @@ dependencies:
       - cookiecutter
       - autoroot
       - python-dateutil
+      - pydantic
       # DATA ACCESS
       - climetlab
       - xee
