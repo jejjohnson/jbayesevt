@@ -26,3 +26,23 @@ def extract_codes_from_xarray(
 
     ds_new = xr.concat(ds_new, dim="channel")
     return ds_new
+
+
+def load_ensemble_dataset(output_path: str, domain: str="globe") -> xr.Dataset:
+    """
+    Load an ensemble dataset from a NetCDF file from a Earth2MIP API.
+
+    Parameters:
+        output_path (str): The path to the NetCDF file.
+        domain (str, optional): The domain of the dataset. Defaults to "globe".
+
+    Returns:
+        xr.Dataset: The loaded ensemble dataset.
+    """
+    time = xr.open_dataset(output_path).time
+    root = xr.open_dataset(output_path, decode_times=False)
+    ds = xr.open_dataset(output_path, chunks={"time": 1}, group=domain, engine="netcdf4")
+    ds.attrs = root.attrs
+    ds = ds.assign_coords(time=time)
+
+    return ds
