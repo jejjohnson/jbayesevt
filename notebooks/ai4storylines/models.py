@@ -48,35 +48,6 @@ class ModelPredictorMCMC:
         raise NotImplemented
 
 
-def model_bhm(num_spatial: int, x: Float[Array, "M D"], y: Float[Array, "M N"]=None):
-    if len(x.shape) != 2:
-        x = x[None,:]
-    num_models, num_covariates = x.shape
-    # noise
-    scale = numpyro.sample("scale", dist.LogNormal(0.0, 10.0))
-    z_scale_mu = numpyro.sample("z_scale_mean", dist.Normal(0.0, 10.0))
-    z_scale_scale = numpyro.sample("z_scale_scale", dist.LogNormal(0.0, 10.0))
-    # priors on mean
-    loc_prior_mean = numpyro.sample("loc_prior_mean", dist.Normal(0.0, 10.))
-    loc_prior_scale = numpyro.sample("loc_prior_scale", dist.LogNormal(0.0, 10.))
-    # priors on bias
-    bias_prior_mean = numpyro.sample("bias_prior_mean", dist.Normal(0.0, 10.))
-    bias_prior_scale = numpyro.sample("bias_prior_scale", dist.LogNormal(0.0, 10.))
-    # spatial locations
-    with numpyro.plate("spatial", num_spatial):
-        # sample from bias (N,)
-        bias: Float[Array, "N"]  = numpyro.sample("bias", dist.Normal(bias_prior_mean, bias_prior_scale))
-        # same noise
-        z_scale: Float[Array, "N"] = numpyro.sample("z_scale", dist.LogNormal(z_scale_mu, z_scale_scale))
-    with numpyro.plate("covariates", num_covariates), numpyro.plate("spatial", num_spatial):
-        # sample weights, (N,D)
-        weight: Float[Array, "N D"] = numpyro.sample("weight", dist.Normal(loc_prior_mean, loc_prior_scale))
-        # conditional latent variable, (M,N)
-        z: Float[Array, "M N"] = jnp.einsum("ND,MD->MN",weight, x) + bias + z_scale
-    # Data Likelihood
-    numpyro.sample("obs", dist.Normal(z, scale), obs=y)
-
-
 @dataclass
 class LinearRegression:
     num_spatial: int
@@ -117,7 +88,42 @@ class BayesianLinearRegression:
         with numpyro.plate("models", num_models):
             
             z = jnp.einsum("ND,MD->MN",loc,x) + bias
-            numpyro.sample("obs", dist.Normal(z, scale).to_event(1), obs=y)
+        
+        numpyro.sample("obs", dist.Normal(z, scale), obs=y)
+
+
+@dataclass
+class BayesianHierachicalRegression:
+    num_spatial: int
+
+    def model(self, x: Float[Array, "M D"], y: Float[Array, "M N"]=None):
+        if len(x.shape) != 2:
+            x = x[None,:]
+        num_models, num_covariates = x.shape
+        # noise
+        scale = numpyro.sample("scale", dist.HalfCauchy(10.0))
+        z_scale_mu = numpyro.sample("z_scale_mean", dist.Normal(0.0, 10.0))
+        z_scale_scale = numpyro.sample("z_scale_scale", dist.HalfCauchy(10.0))
+        # priors on mean
+        loc_prior_mean = numpyro.sample("loc_prior_mean", dist.Normal(0.0, 10.))
+        loc_prior_scale = numpyro.sample("loc_prior_scale", dist.HalfCauchy(10.0))
+        # priors on bias
+        bias_prior_mean = numpyro.sample("bias_prior_mean", dist.Normal(0.0, 10.))
+        bias_prior_scale = numpyro.sample("bias_prior_scale", dist.HalfCauchy(10.0))
+        # spatial locations
+        with numpyro.plate("spatial", self.num_spatial):
+            # sample from bias (N,)
+            bias: Float[Array, "N"]  = numpyro.sample("bias", dist.Normal(bias_prior_mean, bias_prior_scale))
+            # same noise
+            z_scale: Float[Array, "N"] = numpyro.sample("z_scale", dist.LogNormal(z_scale_mu, z_scale_scale))
+        with numpyro.plate("covariates", num_covariates), numpyro.plate("spatial", self.num_spatial):
+            # sample weights, (N,D)
+            weight: Float[Array, "N D"] = numpyro.sample("weight", dist.Normal(loc_prior_mean, loc_prior_scale))
+            # conditional latent variable, (M,N)
+            z: Float[Array, "M N"] = jnp.einsum("ND,MD->MN",weight, x) + bias + z_scale
+            
+        # Data Likelihood
+        numpyro.sample("obs", dist.Normal(z, scale), obs=y)
 
 
 

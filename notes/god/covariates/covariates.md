@@ -1,7 +1,7 @@
 ---
 title: Covariate Effects
 subject: AI 4 Attribution
-short_title: Covariates
+short_title: II - Covariates Effects
 authors:
   - name: J. Emmanuel Johnson
     affiliations:
