@@ -4,23 +4,82 @@ channels:
   - defaults
 dependencies:
   - python=3.11
-  - xarray
-  - cartopy
-  - cmocean
-  - seaborn
-  - matplotlib
-  - xmovie
+  # Standard Libraries
+  - numpy # Numerical Linear Algebra
+  - scipy # Scientific Computing
+  - conda-forge::xarray # Data structures
+  - scikit-learn # Machine Learning
+  - conda-forge::statsmodels
+  - scikit-image
+  # Plotting Libraries
+  - matplotlib # standard plotting library
+  - seaborn # Stats viz library
+  - arviz
+  # JAX
+  - conda-forge::jax
+  - conda-forge::jaxlib
+  # GUI
+  - ipython
+  - conda-forge::ipywidgets
   - ipykernel
-  - ffmpeg
+  - conda-forge::tqdm
   - pip
   - pip:
-      - cookiecutter
+      # Jax framework
+      - equinox
+      - serket
+      - jaxtyping
+      - einops
+      # MATHEMATICS
+      - cola-ml
+      - einops
+      - einx
+      - kernex
+      - torchquad
+      - finitediffx
+      # INTERPOLATION
+      - interpax
+      # Deep learning
+      - keras
+      - flax
+      - mlx-data
+      - xrpatcher
+      # scientific machine learning
+      - diffrax
+      - probdiffeq
+      # optimization
+      - optax
+      - jaxopt
+      - lineax
+      - optimistix
+      # probabilistic
+      - numpyro
+      - tinygp
+      - blackjax
+      - flowjax
+      - dynamax
+      - "tfp-nightly[jax]"
+      - "git+https://github.com/jejjohnson/geo_toolz.git"
+      # formatting
+      - black
+      - pylint
+      - isort
+      - flake8
+      - mypy
+      - pytest
+      - pre-commit
+      - rich
+      - sh
+      - pudb
+      # Notebook stuff
+      - pyprojroot
       - autoroot
-      # DATA ACCESS
-      - climetlab
-      - xee
-      - ecmwf-api-client
-      - cds
-      # VISUALIZATION
-      - lexcube
-      - tqdm
+      - python-dotenv
+      # logging
+      - wandb
+      - loguru
+      - hydra-core
+      - hydra-zen
+      # plotting
+      - celluloid
+      - corner
